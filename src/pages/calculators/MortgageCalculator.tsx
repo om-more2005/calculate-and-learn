@@ -1,6 +1,8 @@
 
 import React, { useState, useEffect } from 'react';
 import { Home } from 'lucide-react';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
 const MortgageCalculator = () => {
   const [homePrice, setHomePrice] = useState(300000);
@@ -18,6 +20,8 @@ const MortgageCalculator = () => {
     totalInterest: 0,
     loanAmount: 0
   });
+
+  const [yearlyBreakdown, setYearlyBreakdown] = useState([]);
 
   useEffect(() => {
     calculateMortgage();
@@ -51,6 +55,38 @@ const MortgageCalculator = () => {
       totalInterest,
       loanAmount
     });
+
+    // Calculate yearly breakdown
+    const yearlyData = [];
+    let remainingBalance = loanAmount;
+    
+    for (let year = 1; year <= loanTerm; year++) {
+      let yearlyPrincipal = 0;
+      let yearlyInterest = 0;
+      
+      for (let month = 1; month <= 12; month++) {
+        if (remainingBalance > 0) {
+          const monthlyInterestPayment = remainingBalance * monthlyRate;
+          const monthlyPrincipalPayment = monthlyPrincipalInterest - monthlyInterestPayment;
+          
+          yearlyInterest += monthlyInterestPayment;
+          yearlyPrincipal += monthlyPrincipalPayment;
+          remainingBalance -= monthlyPrincipalPayment;
+        }
+      }
+      
+      yearlyData.push({
+        year,
+        principal: Math.round(yearlyPrincipal),
+        interest: Math.round(yearlyInterest),
+        balance: Math.round(Math.max(0, remainingBalance)),
+        totalPayment: Math.round(yearlyPrincipal + yearlyInterest),
+      });
+      
+      if (remainingBalance <= 0) break;
+    }
+    
+    setYearlyBreakdown(yearlyData);
   };
 
   return (
@@ -258,6 +294,85 @@ const MortgageCalculator = () => {
             </div>
           </div>
         </div>
+
+        {/* Yearly Breakdown Chart */}
+        {yearlyBreakdown.length > 0 && (
+          <div className="mt-12 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+            <h3 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6">Payment Breakdown Over Time</h3>
+            <div className="h-96 mb-8">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={yearlyBreakdown}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis 
+                    dataKey="year" 
+                    label={{ value: 'Year', position: 'insideBottom', offset: -5 }}
+                  />
+                  <YAxis 
+                    label={{ value: 'Amount ($)', angle: -90, position: 'insideLeft' }}
+                    tickFormatter={(value) => `$${(value / 1000).toFixed(0)}k`}
+                  />
+                  <Tooltip 
+                    formatter={(value) => [`$${value.toLocaleString()}`, '']}
+                    labelFormatter={(label) => `Year ${label}`}
+                  />
+                  <Legend />
+                  <Line 
+                    type="monotone" 
+                    dataKey="principal" 
+                    stroke="#10b981" 
+                    strokeWidth={2}
+                    name="Principal Payment"
+                  />
+                  <Line 
+                    type="monotone" 
+                    dataKey="interest" 
+                    stroke="#f59e0b" 
+                    strokeWidth={2}
+                    name="Interest Payment"
+                  />
+                  <Line 
+                    type="monotone" 
+                    dataKey="balance" 
+                    stroke="#ef4444" 
+                    strokeWidth={2}
+                    name="Remaining Balance"
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        )}
+
+        {/* Yearly Breakdown Table */}
+        {yearlyBreakdown.length > 0 && (
+          <div className="mt-8 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+            <h3 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6">Yearly Payment Schedule</h3>
+            <div className="overflow-auto max-h-96">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Year</TableHead>
+                    <TableHead>Principal</TableHead>
+                    <TableHead>Interest</TableHead>
+                    <TableHead>Total Payment</TableHead>
+                    <TableHead>Remaining Balance</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {yearlyBreakdown.map((year) => (
+                    <TableRow key={year.year}>
+                      <TableCell className="font-medium">{year.year}</TableCell>
+                      <TableCell>${year.principal.toLocaleString()}</TableCell>
+                      <TableCell>${year.interest.toLocaleString()}</TableCell>
+                      <TableCell>${year.totalPayment.toLocaleString()}</TableCell>
+                      <TableCell>${year.balance.toLocaleString()}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          </div>
+        )}
 
         {/* Educational Content */}
         <div className="mt-12 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
