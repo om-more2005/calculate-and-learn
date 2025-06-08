@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import BlogCard from '../components/BlogCard';
 import { Search } from 'lucide-react';
@@ -10,6 +9,14 @@ const Blog = () => {
   const categories = ['All', 'Real Estate', 'Investment', 'Education', 'Personal Finance', 'Health'];
   
   const blogPosts = [
+    {
+      title: "Why Your GPA Matters: From High School to College Success",
+      excerpt: "Understanding the critical role of GPA in your academic journey and proven strategies to improve your grades for better opportunities.",
+      date: "Dec 8, 2024",
+      category: "Education",
+      readTime: "8 min",
+      slug: "gpa-importance-and-improvement-strategies"
+    },
     {
       title: "10 Essential Tips for First-Time Home Buyers",
       excerpt: "Navigate the complex world of home buying with confidence. Learn about down payments, mortgage types, and hidden costs that could impact your budget.",
