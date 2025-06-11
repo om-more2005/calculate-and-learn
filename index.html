@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,6 +18,7 @@
                 <a href="#home" class="nav-link active" data-page="home">Home</a>
                 <a href="#blog" class="nav-link" data-page="blog">Blog</a>
                 <a href="#mortgage" class="nav-link" data-page="mortgage">Mortgage</a>
+                <a href="#loan" class="nav-link" data-page="loan">Loan</a>
                 <a href="#gpa" class="nav-link" data-page="gpa">GPA</a>
             </nav>
             <button class="theme-toggle" id="themeToggle">🌙</button>
@@ -52,18 +52,17 @@
                             <p>Calculate monthly payments, total interest, and amortization schedules for your home loan.</p>
                             <span class="category">Real Estate</span>
                         </div>
+                        <div class="calculator-card" onclick="showPage('loan')">
+                            <div class="card-icon">💰</div>
+                            <h3>Loan Calculator</h3>
+                            <p>Calculate payments for amortized loans, deferred payment loans, and bond valuations with detailed breakdowns.</p>
+                            <span class="category">Finance</span>
+                        </div>
                         <div class="calculator-card" onclick="showPage('gpa')">
                             <div class="card-icon">🎓</div>
                             <h3>GPA Calculator</h3>
                             <p>Calculate your Grade Point Average with support for different grading scales and credit hours.</p>
                             <span class="category">Education</span>
-                        </div>
-                        <div class="calculator-card">
-                            <div class="card-icon">💰</div>
-                            <h3>Loan Calculator</h3>
-                            <p>Calculate payments for personal loans, auto loans, and other installment loans.</p>
-                            <span class="category">Finance</span>
-                            <div class="coming-soon">Coming Soon</div>
                         </div>
                     </div>
                 </div>
@@ -74,31 +73,31 @@
                 <div class="container">
                     <h2>Latest Financial Insights</h2>
                     <div class="blog-grid">
-                        <div class="blog-card" onclick="showBlogPost('gpa-importance')">
-                            <h3>Why Your GPA Matters: From High School to College Success</h3>
-                            <p>Understanding the critical role of GPA in your academic journey and proven strategies to improve your grades.</p>
+                        <div class="blog-card" onclick="showBlogPost('amortized-loans-guide')">
+                            <h3>Understanding Amortized Loans: The Complete Guide</h3>
+                            <p>Learn how amortized loans work, their benefits and drawbacks, and when they're the right choice for your financial needs.</p>
+                            <div class="blog-meta">
+                                <span class="date">Dec 10, 2024</span>
+                                <span class="category">Finance</span>
+                                <span class="read-time">7 min</span>
+                            </div>
+                        </div>
+                        <div class="blog-card" onclick="showBlogPost('deferred-payment-loans-explained')">
+                            <h3>Deferred Payment Loans: When and Why to Use Them</h3>
+                            <p>Explore deferred payment loans, their unique structure, and how they can provide financial flexibility in specific situations.</p>
+                            <div class="blog-meta">
+                                <span class="date">Dec 9, 2024</span>
+                                <span class="category">Finance</span>
+                                <span class="read-time">6 min</span>
+                            </div>
+                        </div>
+                        <div class="blog-card" onclick="showBlogPost('bonds-investment-basics')">
+                            <h3>Bond Investing Basics: Valuation and Risk Assessment</h3>
+                            <p>Understand bond fundamentals, how to calculate bond values, and the key factors that affect bond investments.</p>
                             <div class="blog-meta">
                                 <span class="date">Dec 8, 2024</span>
-                                <span class="category">Education</span>
-                                <span class="read-time">8 min</span>
-                            </div>
-                        </div>
-                        <div class="blog-card">
-                            <h3>10 Essential Tips for First-Time Home Buyers</h3>
-                            <p>Navigate the complex world of home buying with confidence.</p>
-                            <div class="blog-meta">
-                                <span class="date">Dec 6, 2024</span>
-                                <span class="category">Real Estate</span>
-                                <span class="read-time">5 min</span>
-                            </div>
-                        </div>
-                        <div class="blog-card">
-                            <h3>Understanding Compound Interest</h3>
-                            <p>Discover how compound interest can work for or against you.</p>
-                            <div class="blog-meta">
-                                <span class="date">Dec 5, 2024</span>
                                 <span class="category">Investment</span>
-                                <span class="read-time">7 min</span>
+                                <span class="read-time">8 min</span>
                             </div>
                         </div>
                     </div>
@@ -122,6 +121,7 @@
                             <option value="Education">Education</option>
                             <option value="Personal Finance">Personal Finance</option>
                             <option value="Health">Health</option>
+                            <option value="Finance">Finance</option>
                         </select>
                     </div>
                 </div>
@@ -131,6 +131,127 @@
                 <div class="container">
                     <div id="blogResults" class="blog-grid">
                         <!-- Blog posts will be populated by JavaScript -->
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Loan Calculator Page -->
+        <div id="loan" class="page">
+            <section class="calculator-header">
+                <div class="container">
+                    <h1>Loan Calculator</h1>
+                    <p>Calculate amortized loans, deferred payment loans, and bond valuations</p>
+                </div>
+            </section>
+
+            <section class="calculator-content">
+                <div class="container">
+                    <div class="calculator-layout">
+                        <div class="calculator-form">
+                            <div class="form-section">
+                                <h3>Loan Type</h3>
+                                <div class="form-group">
+                                    <label>Select Loan Type</label>
+                                    <select id="loanType" onchange="toggleLoanInputs()">
+                                        <option value="amortized">Amortized Loan</option>
+                                        <option value="deferred">Deferred Payment Loan</option>
+                                        <option value="bond">Bond Valuation</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Amortized Loan Inputs -->
+                            <div id="amortizedInputs" class="form-section">
+                                <h3>Amortized Loan Details</h3>
+                                <div class="form-group">
+                                    <label for="amortizedPrincipal">Principal Amount ($)</label>
+                                    <input type="number" id="amortizedPrincipal" value="250000" min="0">
+                                </div>
+                                <div class="form-group">
+                                    <label for="amortizedRate">Annual Interest Rate (%)</label>
+                                    <input type="number" id="amortizedRate" value="5.5" min="0" max="30" step="0.01">
+                                </div>
+                                <div class="form-group">
+                                    <label for="amortizedTerm">Loan Term (years)</label>
+                                    <input type="number" id="amortizedTerm" value="30" min="1" max="50">
+                                </div>
+                                <div class="form-group">
+                                    <label>Payment Frequency</label>
+                                    <select id="paymentFrequency">
+                                        <option value="monthly">Monthly</option>
+                                        <option value="biweekly">Bi-weekly</option>
+                                        <option value="quarterly">Quarterly</option>
+                                        <option value="annually">Annually</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Deferred Payment Loan Inputs -->
+                            <div id="deferredInputs" class="form-section hidden">
+                                <h3>Deferred Payment Loan Details</h3>
+                                <div class="form-group">
+                                    <label for="deferredPrincipal">Principal Amount ($)</label>
+                                    <input type="number" id="deferredPrincipal" value="100000" min="0">
+                                </div>
+                                <div class="form-group">
+                                    <label for="deferredRate">Annual Interest Rate (%)</label>
+                                    <input type="number" id="deferredRate" value="6.0" min="0" max="30" step="0.01">
+                                </div>
+                                <div class="form-group">
+                                    <label for="deferredPeriod">Deferment Period (years)</label>
+                                    <input type="number" id="deferredPeriod" value="5" min="0" max="10">
+                                </div>
+                                <div class="form-group">
+                                    <label for="repaymentTerm">Repayment Term (years)</label>
+                                    <input type="number" id="repaymentTerm" value="20" min="1" max="50">
+                                </div>
+                                <div class="form-group">
+                                    <label>Compounding During Deferment</label>
+                                    <select id="deferredCompounding">
+                                        <option value="simple">Simple Interest</option>
+                                        <option value="compound">Compound Interest</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Bond Inputs -->
+                            <div id="bondInputs" class="form-section hidden">
+                                <h3>Bond Valuation Details</h3>
+                                <div class="form-group">
+                                    <label for="faceValue">Face Value ($)</label>
+                                    <input type="number" id="faceValue" value="1000" min="0">
+                                </div>
+                                <div class="form-group">
+                                    <label for="couponRate">Annual Coupon Rate (%)</label>
+                                    <input type="number" id="couponRate" value="4.5" min="0" max="20" step="0.01">
+                                </div>
+                                <div class="form-group">
+                                    <label for="marketRate">Market Interest Rate (%)</label>
+                                    <input type="number" id="marketRate" value="5.0" min="0" max="20" step="0.01">
+                                </div>
+                                <div class="form-group">
+                                    <label for="yearsToMaturity">Years to Maturity</label>
+                                    <input type="number" id="yearsToMaturity" value="10" min="1" max="50">
+                                </div>
+                                <div class="form-group">
+                                    <label>Payment Frequency</label>
+                                    <select id="bondFrequency">
+                                        <option value="annual">Annual</option>
+                                        <option value="semiannual">Semi-annual</option>
+                                        <option value="quarterly">Quarterly</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <button type="button" id="calculateLoan" class="btn btn-primary" onclick="calculateLoan()">Calculate</button>
+                        </div>
+
+                        <div class="calculator-results">
+                            <div id="loanResults" class="results-card hidden">
+                                <!-- Results will be displayed here -->
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
