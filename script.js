@@ -514,19 +514,28 @@ function toggleLoanInputs() {
     }
 }
 
+let currentChart = null;
+
 function calculateLoan() {
     const loanType = document.getElementById('loanType').value;
     let results = '';
+    let chartData = null;
     
     switch(loanType) {
         case 'amortized':
-            results = calculateAmortizedLoan();
+            const amortizedData = calculateAmortizedLoan();
+            results = amortizedData.html;
+            chartData = amortizedData.chartData;
             break;
         case 'deferred':
-            results = calculateDeferredLoan();
+            const deferredData = calculateDeferredLoan();
+            results = deferredData.html;
+            chartData = deferredData.chartData;
             break;
         case 'bond':
-            results = calculateBondValue();
+            const bondData = calculateBondValue();
+            results = bondData.html;
+            chartData = bondData.chartData;
             break;
     }
     
@@ -534,7 +543,65 @@ function calculateLoan() {
     if (resultsDiv) {
         resultsDiv.innerHTML = results;
         resultsDiv.classList.remove('hidden');
+        
+        // Create chart if data is available
+        if (chartData) {
+            createPieChart(chartData);
+        }
     }
+}
+
+function createPieChart(data) {
+    // Destroy existing chart if it exists
+    if (currentChart) {
+        currentChart.destroy();
+    }
+    
+    const canvas = document.getElementById('loanChart');
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    
+    currentChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: data.labels,
+            datasets: [{
+                data: data.values,
+                backgroundColor: [
+                    '#3B82F6', // Blue for principal
+                    '#EF4444', // Red for interest
+                    '#10B981', // Green for additional categories
+                    '#F59E0B'  // Orange for additional categories
+                ],
+                borderWidth: 2,
+                borderColor: '#ffffff'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        padding: 20,
+                        usePointStyle: true
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const value = context.parsed;
+                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                            const percentage = ((value / total) * 100).toFixed(1);
+                            return `${context.label}: $${value.toLocaleString()} (${percentage}%)`;
+                        }
+                    }
+                }
+            }
+        }
+    });
 }
 
 function calculateAmortizedLoan() {
@@ -562,25 +629,42 @@ function calculateAmortizedLoan() {
     const totalPaid = payment * totalPayments;
     const totalInterest = totalPaid - principal;
     
-    return `
-        <h3>Amortized Loan Results</h3>
-        <div class="result-item">
-            <span class="result-label">${frequency.charAt(0).toUpperCase() + frequency.slice(1)} Payment:</span>
-            <span class="result-value">$${payment.toFixed(2)}</span>
-        </div>
-        <div class="result-item">
-            <span class="result-label">Total Payments:</span>
-            <span class="result-value">$${totalPaid.toFixed(2)}</span>
-        </div>
-        <div class="result-item">
-            <span class="result-label">Total Interest:</span>
-            <span class="result-value">$${totalInterest.toFixed(2)}</span>
-        </div>
-        <div class="result-item">
-            <span class="result-label">Interest Percentage:</span>
-            <span class="result-value">${((totalInterest/principal)*100).toFixed(1)}%</span>
+    const html = `
+        <div class="results-with-chart">
+            <div>
+                <h3>Amortized Loan Results</h3>
+                <div class="result-item">
+                    <span class="result-label">${frequency.charAt(0).toUpperCase() + frequency.slice(1)} Payment:</span>
+                    <span class="result-value">$${payment.toFixed(2)}</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Total Payments:</span>
+                    <span class="result-value">$${totalPaid.toFixed(2)}</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Total Interest:</span>
+                    <span class="result-value">$${totalInterest.toFixed(2)}</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Interest Percentage:</span>
+                    <span class="result-value">${((totalInterest/principal)*100).toFixed(1)}%</span>
+                </div>
+            </div>
+            <div class="chart-container">
+                <h4 class="chart-title">Principal vs Interest Breakdown</h4>
+                <div class="chart-wrapper">
+                    <canvas id="loanChart"></canvas>
+                </div>
+            </div>
         </div>
     `;
+    
+    const chartData = {
+        labels: ['Principal', 'Total Interest'],
+        values: [principal, totalInterest]
+    };
+    
+    return { html, chartData };
 }
 
 function calculateDeferredLoan() {
@@ -613,30 +697,48 @@ function calculateDeferredLoan() {
     const totalPaid = monthlyPayment * totalPayments;
     const totalInterest = totalPaid - principal;
     const defermentInterest = newPrincipal - principal;
+    const repaymentInterest = totalInterest - defermentInterest;
     
-    return `
-        <h3>Deferred Payment Loan Results</h3>
-        <div class="result-item">
-            <span class="result-label">Interest During Deferment:</span>
-            <span class="result-value">$${defermentInterest.toFixed(2)}</span>
-        </div>
-        <div class="result-item">
-            <span class="result-label">New Principal Amount:</span>
-            <span class="result-value">$${newPrincipal.toFixed(2)}</span>
-        </div>
-        <div class="result-item">
-            <span class="result-label">Monthly Payment:</span>
-            <span class="result-value">$${monthlyPayment.toFixed(2)}</span>
-        </div>
-        <div class="result-item">
-            <span class="result-label">Total Payments:</span>
-            <span class="result-value">$${totalPaid.toFixed(2)}</span>
-        </div>
-        <div class="result-item">
-            <span class="result-label">Total Interest:</span>
-            <span class="result-value">$${totalInterest.toFixed(2)}</span>
+    const html = `
+        <div class="results-with-chart">
+            <div>
+                <h3>Deferred Payment Loan Results</h3>
+                <div class="result-item">
+                    <span class="result-label">Interest During Deferment:</span>
+                    <span class="result-value">$${defermentInterest.toFixed(2)}</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">New Principal Amount:</span>
+                    <span class="result-value">$${newPrincipal.toFixed(2)}</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Monthly Payment:</span>
+                    <span class="result-value">$${monthlyPayment.toFixed(2)}</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Total Payments:</span>
+                    <span class="result-value">$${totalPaid.toFixed(2)}</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Total Interest:</span>
+                    <span class="result-value">$${totalInterest.toFixed(2)}</span>
+                </div>
+            </div>
+            <div class="chart-container">
+                <h4 class="chart-title">Cost Breakdown</h4>
+                <div class="chart-wrapper">
+                    <canvas id="loanChart"></canvas>
+                </div>
+            </div>
         </div>
     `;
+    
+    const chartData = {
+        labels: ['Original Principal', 'Deferment Interest', 'Repayment Interest'],
+        values: [principal, defermentInterest, repaymentInterest]
+    };
+    
+    return { html, chartData };
 }
 
 function calculateBondValue() {
@@ -682,29 +784,46 @@ function calculateBondValue() {
         status = 'Par';
     }
     
-    return `
-        <h3>Bond Valuation Results</h3>
-        <div class="result-item">
-            <span class="result-label">Bond Value:</span>
-            <span class="result-value">$${bondValue.toFixed(2)}</span>
-        </div>
-        <div class="result-item">
-            <span class="result-label">Trading Status:</span>
-            <span class="result-value">${status}</span>
-        </div>
-        <div class="result-item">
-            <span class="result-label">${frequency.charAt(0).toUpperCase() + frequency.slice(1)} Coupon:</span>
-            <span class="result-value">$${couponPayment.toFixed(2)}</span>
-        </div>
-        <div class="result-item">
-            <span class="result-label">Current Yield:</span>
-            <span class="result-value">${(currentYield * 100).toFixed(2)}%</span>
-        </div>
-        <div class="result-item">
-            <span class="result-label">Total Coupon Payments:</span>
-            <span class="result-value">$${totalCoupons.toFixed(2)}</span>
+    const html = `
+        <div class="results-with-chart">
+            <div>
+                <h3>Bond Valuation Results</h3>
+                <div class="result-item">
+                    <span class="result-label">Bond Value:</span>
+                    <span class="result-value">$${bondValue.toFixed(2)}</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Trading Status:</span>
+                    <span class="result-value">${status}</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">${frequency.charAt(0).toUpperCase() + frequency.slice(1)} Coupon:</span>
+                    <span class="result-value">$${couponPayment.toFixed(2)}</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Current Yield:</span>
+                    <span class="result-value">${(currentYield * 100).toFixed(2)}%</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Total Coupon Payments:</span>
+                    <span class="result-value">$${totalCoupons.toFixed(2)}</span>
+                </div>
+            </div>
+            <div class="chart-container">
+                <h4 class="chart-title">Bond Value Breakdown</h4>
+                <div class="chart-wrapper">
+                    <canvas id="loanChart"></canvas>
+                </div>
+            </div>
         </div>
     `;
+    
+    const chartData = {
+        labels: ['Present Value of Coupons', 'Present Value of Face Value'],
+        values: [pvCoupons, pvFaceValue]
+    };
+    
+    return { html, chartData };
 }
 
 // GPA Calculator Functions
@@ -916,24 +1035,80 @@ function calculateMortgage() {
     const resultsDiv = document.getElementById('mortgageResults');
     if (resultsDiv) {
         resultsDiv.innerHTML = `
-            <h3>Mortgage Calculation Results</h3>
-            <div class="result-item">
-                <span class="result-label">Monthly Payment:</span>
-                <span class="result-value">$${monthlyPayment.toFixed(2)}</span>
-            </div>
-            <div class="result-item">
-                <span class="result-label">Total Payments:</span>
-                <span class="result-value">$${totalPaid.toFixed(2)}</span>
-            </div>
-            <div class="result-item">
-                <span class="result-label">Total Interest:</span>
-                <span class="result-value">$${totalInterest.toFixed(2)}</span>
-            </div>
-            <div class="result-item">
-                <span class="result-label">Loan Amount:</span>
-                <span class="result-value">$${principal.toFixed(2)}</span>
+            <div class="results-with-chart">
+                <div>
+                    <h3>Mortgage Calculation Results</h3>
+                    <div class="result-item">
+                        <span class="result-label">Monthly Payment:</span>
+                        <span class="result-value">$${monthlyPayment.toFixed(2)}</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Total Payments:</span>
+                        <span class="result-value">$${totalPaid.toFixed(2)}</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Total Interest:</span>
+                        <span class="result-value">$${totalInterest.toFixed(2)}</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Loan Amount:</span>
+                        <span class="result-value">$${principal.toFixed(2)}</span>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <h4 class="chart-title">Principal vs Interest</h4>
+                    <div class="chart-wrapper">
+                        <canvas id="mortgageChart"></canvas>
+                    </div>
+                </div>
             </div>
         `;
         resultsDiv.classList.remove('hidden');
+        
+        // Create mortgage chart
+        createMortgageChart(principal, totalInterest);
     }
+}
+
+function createMortgageChart(principal, interest) {
+    const canvas = document.getElementById('mortgageChart');
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    
+    new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: ['Principal', 'Total Interest'],
+            datasets: [{
+                data: [principal, interest],
+                backgroundColor: ['#3B82F6', '#EF4444'],
+                borderWidth: 2,
+                borderColor: '#ffffff'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        padding: 20,
+                        usePointStyle: true
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const value = context.parsed;
+                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                            const percentage = ((value / total) * 100).toFixed(1);
+                            return `${context.label}: $${value.toLocaleString()} (${percentage}%)`;
+                        }
+                    }
+                }
+            }
+        }
+    });
 }

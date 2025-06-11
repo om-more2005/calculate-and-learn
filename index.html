@@ -6,13 +6,16 @@
     <title>Calculate & Learn - Financial Tools & Education</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <!-- Header -->
     <header class="header">
         <div class="container">
             <div class="nav-brand">
-                <h1>Calculate & Learn</h1>
+                <button class="logo-button" onclick="showPage('home')">
+                    <h1>Calculate & Learn</h1>
+                </button>
             </div>
             <nav class="nav">
                 <a href="#home" class="nav-link active" data-page="home">Home</a>
@@ -68,38 +71,14 @@
                 </div>
             </section>
 
-            <!-- Featured Blog Posts -->
-            <section class="featured-posts">
+            <!-- CTA Section -->
+            <section class="cta-section">
                 <div class="container">
-                    <h2>Latest Financial Insights</h2>
-                    <div class="blog-grid">
-                        <div class="blog-card" onclick="showBlogPost('amortized-loans-guide')">
-                            <h3>Understanding Amortized Loans: The Complete Guide</h3>
-                            <p>Learn how amortized loans work, their benefits and drawbacks, and when they're the right choice for your financial needs.</p>
-                            <div class="blog-meta">
-                                <span class="date">Dec 10, 2024</span>
-                                <span class="category">Finance</span>
-                                <span class="read-time">7 min</span>
-                            </div>
-                        </div>
-                        <div class="blog-card" onclick="showBlogPost('deferred-payment-loans-explained')">
-                            <h3>Deferred Payment Loans: When and Why to Use Them</h3>
-                            <p>Explore deferred payment loans, their unique structure, and how they can provide financial flexibility in specific situations.</p>
-                            <div class="blog-meta">
-                                <span class="date">Dec 9, 2024</span>
-                                <span class="category">Finance</span>
-                                <span class="read-time">6 min</span>
-                            </div>
-                        </div>
-                        <div class="blog-card" onclick="showBlogPost('bonds-investment-basics')">
-                            <h3>Bond Investing Basics: Valuation and Risk Assessment</h3>
-                            <p>Understand bond fundamentals, how to calculate bond values, and the key factors that affect bond investments.</p>
-                            <div class="blog-meta">
-                                <span class="date">Dec 8, 2024</span>
-                                <span class="category">Investment</span>
-                                <span class="read-time">8 min</span>
-                            </div>
-                        </div>
+                    <h2>Start Making Better Financial Decisions Today</h2>
+                    <p>Join thousands of users who trust our calculators and educational content for their financial planning</p>
+                    <div class="cta-buttons">
+                        <button class="btn btn-primary" onclick="showPage('mortgage')">Calculate Your Mortgage</button>
+                        <button class="btn btn-secondary" onclick="showPage('blog')">Explore Financial Education</button>
                     </div>
                 </div>
             </section>
