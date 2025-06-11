@@ -1112,3 +1112,348 @@ function createMortgageChart(principal, interest) {
         }
     });
 }
+
+// Dropdown functionality
+function toggleDropdown() {
+    const dropdown = document.getElementById('calculatorDropdown');
+    dropdown.classList.toggle('show');
+}
+
+// Close dropdown when clicking outside
+document.addEventListener('click', function(event) {
+    const dropdown = document.getElementById('calculatorDropdown');
+    const toggle = document.querySelector('.dropdown-toggle');
+    
+    if (!toggle.contains(event.target) && !dropdown.contains(event.target)) {
+        dropdown.classList.remove('show');
+    }
+});
+
+// BMI Calculator Functions
+function toggleBMIUnits() {
+    const units = document.getElementById('bmiUnits').value;
+    const metricInputs = document.getElementById('metricInputs');
+    const imperialInputs = document.getElementById('imperialInputs');
+    
+    if (units === 'metric') {
+        metricInputs.classList.remove('hidden');
+        imperialInputs.classList.add('hidden');
+    } else {
+        metricInputs.classList.add('hidden');
+        imperialInputs.classList.remove('hidden');
+    }
+}
+
+function calculateBMI() {
+    const units = document.getElementById('bmiUnits').value;
+    let weight, height;
+    
+    if (units === 'metric') {
+        weight = parseFloat(document.getElementById('weightKg').value);
+        height = parseFloat(document.getElementById('heightCm').value) / 100; // Convert to meters
+    } else {
+        weight = parseFloat(document.getElementById('weightLbs').value) * 0.453592; // Convert to kg
+        const feet = parseFloat(document.getElementById('heightFt').value);
+        const inches = parseFloat(document.getElementById('heightIn').value);
+        height = ((feet * 12) + inches) * 0.0254; // Convert to meters
+    }
+    
+    const bmi = weight / (height * height);
+    let category, color, advice;
+    
+    if (bmi < 18.5) {
+        category = 'Underweight';
+        color = '#3b82f6';
+        advice = 'Consider consulting with a healthcare provider about healthy weight gain strategies.';
+    } else if (bmi < 25) {
+        category = 'Normal weight';
+        color = '#10b981';
+        advice = 'Great! Maintain your current lifestyle with balanced diet and regular exercise.';
+    } else if (bmi < 30) {
+        category = 'Overweight';
+        color = '#f59e0b';
+        advice = 'Consider adopting healthier eating habits and increasing physical activity.';
+    } else {
+        category = 'Obese';
+        color = '#ef4444';
+        advice = 'Consider consulting with a healthcare provider for personalized weight management strategies.';
+    }
+    
+    const resultsDiv = document.getElementById('bmiResults');
+    resultsDiv.innerHTML = `
+        <h3>BMI Results</h3>
+        <div class="result-item">
+            <span class="result-label">BMI</span>
+            <span class="result-value" style="color: ${color}">${bmi.toFixed(1)}</span>
+        </div>
+        <div class="result-item">
+            <span class="result-label">Category</span>
+            <span class="result-value" style="color: ${color}">${category}</span>
+        </div>
+        <div class="result-item">
+            <span class="result-label">Weight</span>
+            <span class="result-value">${weight.toFixed(1)} kg</span>
+        </div>
+        <div class="result-item">
+            <span class="result-label">Height</span>
+            <span class="result-value">${(height * 100).toFixed(1)} cm</span>
+        </div>
+        <div style="margin-top: 1rem; padding: 1rem; background-color: var(--bg-tertiary); border-radius: 0.5rem;">
+            <strong>Recommendation:</strong> ${advice}
+        </div>
+        <div style="margin-top: 1rem; font-size: 0.875rem; color: var(--text-muted);">
+            <strong>BMI Ranges:</strong><br>
+            Underweight: Below 18.5<br>
+            Normal: 18.5 - 24.9<br>
+            Overweight: 25 - 29.9<br>
+            Obese: 30 and above
+        </div>
+    `;
+    resultsDiv.classList.remove('hidden');
+}
+
+// Calorie Calculator Functions
+function toggleCalorieUnits() {
+    const units = document.getElementById('calorieUnits').value;
+    const metricInputs = document.getElementById('calorieMetricInputs');
+    const imperialInputs = document.getElementById('calorieImperialInputs');
+    
+    if (units === 'metric') {
+        metricInputs.classList.remove('hidden');
+        imperialInputs.classList.add('hidden');
+    } else {
+        metricInputs.classList.add('hidden');
+        imperialInputs.classList.remove('hidden');
+    }
+}
+
+function calculateCalories() {
+    const units = document.getElementById('calorieUnits').value;
+    const gender = document.getElementById('gender').value;
+    const age = parseFloat(document.getElementById('age').value);
+    const activityLevel = parseFloat(document.getElementById('activityLevel').value);
+    const weightGoal = parseFloat(document.getElementById('weightGoal').value);
+    
+    let weight, height;
+    
+    if (units === 'metric') {
+        weight = parseFloat(document.getElementById('calorieWeightKg').value);
+        height = parseFloat(document.getElementById('calorieHeightCm').value);
+    } else {
+        weight = parseFloat(document.getElementById('calorieWeightLbs').value) * 0.453592; // Convert to kg
+        const feet = parseFloat(document.getElementById('calorieHeightFt').value);
+        const inches = parseFloat(document.getElementById('calorieHeightIn').value);
+        height = ((feet * 12) + inches) * 2.54; // Convert to cm
+    }
+    
+    // Calculate BMR using Mifflin-St Jeor Equation
+    let bmr;
+    if (gender === 'male') {
+        bmr = (10 * weight) + (6.25 * height) - (5 * age) + 5;
+    } else {
+        bmr = (10 * weight) + (6.25 * height) - (5 * age) - 161;
+    }
+    
+    // Calculate TDEE (Total Daily Energy Expenditure)
+    const tdee = bmr * activityLevel;
+    
+    // Calculate target calories based on goal
+    const targetCalories = tdee + (weightGoal * 3500 / 7); // 3500 calories per pound, divided by 7 days
+    
+    // Calculate macronutrient breakdown (example: 40% carbs, 30% protein, 30% fat)
+    const protein = (targetCalories * 0.30) / 4; // 4 calories per gram of protein
+    const carbs = (targetCalories * 0.40) / 4; // 4 calories per gram of carbs
+    const fat = (targetCalories * 0.30) / 9; // 9 calories per gram of fat
+    
+    const resultsDiv = document.getElementById('calorieResults');
+    resultsDiv.innerHTML = `
+        <h3>Calorie Results</h3>
+        <div class="result-item">
+            <span class="result-label">BMR (Base Metabolic Rate)</span>
+            <span class="result-value">${Math.round(bmr)} calories/day</span>
+        </div>
+        <div class="result-item">
+            <span class="result-label">TDEE (Maintenance)</span>
+            <span class="result-value">${Math.round(tdee)} calories/day</span>
+        </div>
+        <div class="result-item">
+            <span class="result-label">Target Calories</span>
+            <span class="result-value" style="color: var(--accent)">${Math.round(targetCalories)} calories/day</span>
+        </div>
+        <div style="margin-top: 1.5rem;">
+            <h4>Recommended Macronutrient Breakdown:</h4>
+            <div class="result-item">
+                <span class="result-label">Protein</span>
+                <span class="result-value">${Math.round(protein)}g (30%)</span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">Carbohydrates</span>
+                <span class="result-value">${Math.round(carbs)}g (40%)</span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">Fat</span>
+                <span class="result-value">${Math.round(fat)}g (30%)</span>
+            </div>
+        </div>
+        <div style="margin-top: 1rem; padding: 1rem; background-color: var(--bg-tertiary); border-radius: 0.5rem; font-size: 0.875rem;">
+            <strong>Note:</strong> These are estimates based on general formulas. Individual needs may vary. 
+            Consult with a healthcare provider or registered dietitian for personalized advice.
+        </div>
+    `;
+    resultsDiv.classList.remove('hidden');
+}
+
+// Scientific Calculator Functions
+let currentInput = '';
+let shouldResetDisplay = false;
+
+function appendToDisplay(value) {
+    const display = document.getElementById('scientificDisplay');
+    
+    if (shouldResetDisplay) {
+        display.value = '';
+        shouldResetDisplay = false;
+    }
+    
+    if (value === '3.14159') {
+        display.value += 'π';
+        currentInput += Math.PI;
+    } else {
+        display.value += value;
+        currentInput += value;
+    }
+}
+
+function clearDisplay() {
+    document.getElementById('scientificDisplay').value = '';
+    currentInput = '';
+}
+
+function clearEntry() {
+    document.getElementById('scientificDisplay').value = '';
+    currentInput = '';
+}
+
+function backspace() {
+    const display = document.getElementById('scientificDisplay');
+    display.value = display.value.slice(0, -1);
+    currentInput = currentInput.slice(0, -1);
+}
+
+function calculateScientific() {
+    const display = document.getElementById('scientificDisplay');
+    let expression = currentInput;
+    
+    try {
+        // Replace mathematical functions with JavaScript equivalents
+        expression = expression.replace(/sin\(/g, 'Math.sin(');
+        expression = expression.replace(/cos\(/g, 'Math.cos(');
+        expression = expression.replace(/tan\(/g, 'Math.tan(');
+        expression = expression.replace(/log\(/g, 'Math.log10(');
+        expression = expression.replace(/ln\(/g, 'Math.log(');
+        expression = expression.replace(/sqrt\(/g, 'Math.sqrt(');
+        expression = expression.replace(/\^/g, '**');
+        expression = expression.replace(/π/g, Math.PI);
+        
+        const result = eval(expression);
+        display.value = result;
+        currentInput = result.toString();
+        shouldResetDisplay = true;
+    } catch (error) {
+        display.value = 'Error';
+        currentInput = '';
+        shouldResetDisplay = true;
+    }
+}
+
+// Timezone Calculator Functions
+function addTimezone() {
+    const container = document.getElementById('targetTimezones');
+    const timezoneDiv = document.createElement('div');
+    timezoneDiv.className = 'timezone-conversion';
+    timezoneDiv.innerHTML = `
+        <div class="form-group">
+            <label>Convert to</label>
+            <select class="target-timezone">
+                <option value="America/New_York">Eastern Time (ET)</option>
+                <option value="America/Chicago">Central Time (CT)</option>
+                <option value="America/Denver">Mountain Time (MT)</option>
+                <option value="America/Los_Angeles">Pacific Time (PT)</option>
+                <option value="Europe/London">London (GMT)</option>
+                <option value="Europe/Paris">Paris (CET)</option>
+                <option value="Europe/Berlin">Berlin (CET)</option>
+                <option value="Asia/Tokyo">Tokyo (JST)</option>
+                <option value="Asia/Shanghai">Beijing (CST)</option>
+                <option value="Asia/Dubai">Dubai (GST)</option>
+                <option value="Australia/Sydney">Sydney (AEDT)</option>
+                <option value="UTC">UTC</option>
+            </select>
+        </div>
+        <button type="button" class="remove-timezone" onclick="removeTimezone(this)">×</button>
+    `;
+    container.appendChild(timezoneDiv);
+}
+
+function removeTimezone(button) {
+    button.parentElement.remove();
+}
+
+function convertTimezones() {
+    const sourceDate = document.getElementById('sourceDate').value;
+    const sourceTime = document.getElementById('sourceTime').value;
+    const sourceTimezone = document.getElementById('sourceTimezone').value;
+    
+    if (!sourceDate || !sourceTime) {
+        alert('Please enter both date and time');
+        return;
+    }
+    
+    const sourceDateTime = new Date(`${sourceDate}T${sourceTime}`);
+    const targetTimezones = document.querySelectorAll('.target-timezone');
+    
+    const resultsDiv = document.getElementById('timezoneResults');
+    let resultsHTML = `
+        <h3>Time Conversion Results</h3>
+        <div class="result-item">
+            <span class="result-label">Source Time</span>
+            <span class="result-value">${sourceDateTime.toLocaleString()} (${sourceTimezone})</span>
+        </div>
+    `;
+    
+    targetTimezones.forEach(select => {
+        const timezone = select.value;
+        const convertedTime = new Date(sourceDateTime.toLocaleString("en-US", {timeZone: sourceTimezone}));
+        const targetTime = new Date(convertedTime.toLocaleString("en-US", {timeZone: timezone}));
+        
+        resultsHTML += `
+            <div class="result-item">
+                <span class="result-label">${timezone.replace('_', ' ')}</span>
+                <span class="result-value">${targetTime.toLocaleString()}</span>
+            </div>
+        `;
+    });
+    
+    resultsHTML += `
+        <div style="margin-top: 1rem; padding: 1rem; background-color: var(--bg-tertiary); border-radius: 0.5rem; font-size: 0.875rem;">
+            <strong>Note:</strong> Time zone conversions are approximate and may not account for daylight saving time changes. 
+            Please verify important times with official sources.
+        </div>
+    `;
+    
+    resultsDiv.innerHTML = resultsHTML;
+    resultsDiv.classList.remove('hidden');
+}
+
+// Initialize date and time inputs with current values
+document.addEventListener('DOMContentLoaded', function() {
+    const now = new Date();
+    const dateInput = document.getElementById('sourceDate');
+    const timeInput = document.getElementById('sourceTime');
+    
+    if (dateInput) {
+        dateInput.value = now.toISOString().split('T')[0];
+    }
+    if (timeInput) {
+        timeInput.value = now.toTimeString().slice(0, 5);
+    }
+});

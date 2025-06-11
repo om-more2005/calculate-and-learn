@@ -1,3 +1,4 @@
+
 /* Reset and Base Styles */
 * {
     margin: 0;
@@ -75,6 +76,7 @@ body {
 .nav {
     display: flex;
     gap: 2rem;
+    align-items: center;
 }
 
 .nav-link {
@@ -83,10 +85,72 @@ body {
     font-weight: 500;
     transition: color 0.3s ease;
     cursor: pointer;
+    background: none;
+    border: none;
+    font-size: 1rem;
 }
 
 .nav-link:hover,
 .nav-link.active {
+    color: var(--accent);
+}
+
+/* Dropdown Menu */
+.nav-dropdown {
+    position: relative;
+}
+
+.dropdown-toggle {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-weight: 500;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: color 0.3s ease;
+}
+
+.dropdown-toggle:hover {
+    color: var(--accent);
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: var(--bg-primary);
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    min-width: 200px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+.dropdown-menu.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.dropdown-item {
+    display: block;
+    padding: 0.75rem 1rem;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border-bottom: 1px solid var(--border);
+}
+
+.dropdown-item:last-child {
+    border-bottom: none;
+}
+
+.dropdown-item:hover {
+    background-color: var(--bg-tertiary);
     color: var(--accent);
 }
 
@@ -249,16 +313,122 @@ body {
     font-weight: 500;
 }
 
-.coming-soon {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
+/* Scientific Calculator */
+.scientific-calculator {
+    max-width: 500px;
+    margin: 0 auto;
+    background-color: var(--bg-primary);
+    border-radius: 1rem;
+    padding: 2rem;
+    border: 1px solid var(--border);
+}
+
+.calculator-display {
+    margin-bottom: 1rem;
+}
+
+.calculator-display input {
+    width: 100%;
+    padding: 1rem;
+    font-size: 1.5rem;
+    text-align: right;
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+}
+
+.calculator-buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.5rem;
+}
+
+.calculator-buttons button {
+    padding: 1rem;
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-number {
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+}
+
+.btn-number:hover {
+    background-color: var(--border);
+}
+
+.btn-operator {
+    background-color: var(--accent);
+    color: white;
+}
+
+.btn-operator:hover {
+    background-color: var(--accent-hover);
+}
+
+.btn-function {
     background-color: var(--warning);
     color: white;
-    padding: 0.25rem 0.5rem;
-    border-radius: 0.25rem;
-    font-size: 0.75rem;
-    font-weight: 600;
+}
+
+.btn-function:hover {
+    background-color: #d97706;
+}
+
+.btn-clear {
+    background-color: var(--error);
+    color: white;
+}
+
+.btn-clear:hover {
+    background-color: #dc2626;
+}
+
+.btn-equals {
+    background-color: var(--success);
+    color: white;
+    grid-row: span 2;
+}
+
+.btn-equals:hover {
+    background-color: #059669;
+}
+
+.btn-zero {
+    grid-column: span 2;
+}
+
+/* Timezone Calculator */
+.timezone-conversion {
+    padding: 1rem;
+    background-color: var(--bg-tertiary);
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+    position: relative;
+}
+
+.timezone-conversion:last-child .remove-timezone {
+    display: block;
+}
+
+.remove-timezone {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background-color: var(--error);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    display: none;
 }
 
 /* Blog Cards */
@@ -423,43 +593,6 @@ body {
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
-.grade-scale {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    gap: 0.5rem;
-    margin-bottom: 1rem;
-}
-
-.grade-item {
-    display: flex;
-    justify-content: space-between;
-    padding: 0.5rem;
-    background-color: var(--bg-tertiary);
-    border-radius: 0.25rem;
-    font-size: 0.875rem;
-}
-
-.course-input {
-    display: grid;
-    grid-template-columns: 2fr 1fr 1fr 1fr auto;
-    gap: 0.5rem;
-    align-items: end;
-    margin-bottom: 0.5rem;
-    padding: 1rem;
-    background-color: var(--bg-tertiary);
-    border-radius: 0.5rem;
-}
-
-.remove-course {
-    background-color: var(--error);
-    color: white;
-    border: none;
-    padding: 0.5rem;
-    border-radius: 0.25rem;
-    cursor: pointer;
-    font-size: 0.875rem;
-}
-
 .results-card {
     background-color: var(--bg-primary);
     border-radius: 1rem;
@@ -496,11 +629,6 @@ body {
     font-size: 1.125rem;
 }
 
-.gpa-result {
-    font-size: 2rem;
-    color: var(--accent);
-}
-
 /* Utility Classes */
 .hidden {
     display: none !important;
@@ -519,6 +647,47 @@ body {
     color: var(--text-secondary);
 }
 
+/* Logo Button Styles */
+.logo-button {
+    background: none;
+    border: none;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+    padding: 0;
+    text-align: left;
+}
+
+.logo-button:hover {
+    opacity: 0.8;
+}
+
+/* Chart Container */
+.chart-container {
+    margin-top: 2rem;
+    background: var(--bg-primary);
+    padding: 1.5rem;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+}
+
+.chart-wrapper {
+    position: relative;
+    height: 300px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.chart-title {
+    text-align: center;
+    margin-bottom: 1rem;
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .hero h1 {
@@ -534,11 +703,6 @@ body {
         gap: 2rem;
     }
     
-    .course-input {
-        grid-template-columns: 1fr;
-        gap: 0.5rem;
-    }
-    
     .nav {
         display: none;
     }
@@ -549,6 +713,16 @@ body {
     
     .search-input {
         min-width: auto;
+    }
+    
+    .calculator-buttons {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0.25rem;
+    }
+    
+    .calculator-buttons button {
+        padding: 0.75rem 0.5rem;
+        font-size: 0.875rem;
     }
 }
 
@@ -610,98 +784,4 @@ body {
 
 .back-to-blog {
     margin-bottom: 2rem;
-}
-
-/* Logo Button Styles */
-.logo-button {
-    background: none;
-    border: none;
-    color: inherit;
-    font: inherit;
-    cursor: pointer;
-    padding: 0;
-    text-align: left;
-}
-
-.logo-button:hover {
-    opacity: 0.8;
-}
-
-/* CTA Section */
-.cta-section {
-    padding: 4rem 0;
-    background: var(--color-secondary);
-    text-align: center;
-}
-
-.cta-section h2 {
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
-    color: var(--color-text);
-}
-
-.cta-section p {
-    font-size: 1.125rem;
-    margin-bottom: 2rem;
-    color: var(--color-text-secondary);
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.cta-buttons {
-    display: flex;
-    gap: 1rem;
-    justify-content: center;
-    flex-wrap: wrap;
-}
-
-/* Chart Container */
-.chart-container {
-    margin-top: 2rem;
-    background: var(--color-background);
-    padding: 1.5rem;
-    border-radius: 8px;
-    border: 1px solid var(--color-border);
-}
-
-.chart-wrapper {
-    position: relative;
-    height: 300px;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.chart-title {
-    text-align: center;
-    margin-bottom: 1rem;
-    font-size: 1.125rem;
-    font-weight: 600;
-    color: var(--color-text);
-}
-
-/* Results with charts layout */
-.results-with-chart {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem;
-    margin-top: 2rem;
-}
-
-@media (max-width: 768px) {
-    .results-with-chart {
-        grid-template-columns: 1fr;
-    }
-    
-    .cta-buttons {
-        flex-direction: column;
-        align-items: center;
-    }
-    
-    .cta-buttons .btn {
-        width: 100%;
-        max-width: 300px;
-    }
 }
