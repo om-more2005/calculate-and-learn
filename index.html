@@ -1,24 +1,263 @@
+
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>calculate-and-learn</title>
-    <meta name="description" content="Lovable Generated Project" />
-    <meta name="author" content="Lovable" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculate & Learn - Financial Tools & Education</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="nav-brand">
+                <h1>Calculate & Learn</h1>
+            </div>
+            <nav class="nav">
+                <a href="#home" class="nav-link active" data-page="home">Home</a>
+                <a href="#blog" class="nav-link" data-page="blog">Blog</a>
+                <a href="#mortgage" class="nav-link" data-page="mortgage">Mortgage</a>
+                <a href="#gpa" class="nav-link" data-page="gpa">GPA</a>
+            </nav>
+            <button class="theme-toggle" id="themeToggle">🌙</button>
+        </div>
+    </header>
 
-    <meta property="og:title" content="calculate-and-learn" />
-    <meta property="og:description" content="Lovable Generated Project" />
-    <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+    <!-- Main Content -->
+    <main id="mainContent">
+        <!-- Home Page -->
+        <div id="home" class="page active">
+            <!-- Hero Section -->
+            <section class="hero">
+                <div class="container">
+                    <h1>Free Financial Calculators & Education</h1>
+                    <p>Make smarter financial decisions with our comprehensive suite of calculators and expert educational content</p>
+                    <div class="hero-buttons">
+                        <button class="btn btn-primary" onclick="showPage('mortgage')">Try Our Calculators</button>
+                        <button class="btn btn-secondary" onclick="showPage('blog')">Read Our Blog</button>
+                    </div>
+                </div>
+            </section>
 
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@lovable_dev" />
-    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
-  </head>
+            <!-- Calculators Section -->
+            <section class="calculators">
+                <div class="container">
+                    <h2>Popular Calculators</h2>
+                    <div class="calculator-grid">
+                        <div class="calculator-card" onclick="showPage('mortgage')">
+                            <div class="card-icon">🏠</div>
+                            <h3>Mortgage Calculator</h3>
+                            <p>Calculate monthly payments, total interest, and amortization schedules for your home loan.</p>
+                            <span class="category">Real Estate</span>
+                        </div>
+                        <div class="calculator-card" onclick="showPage('gpa')">
+                            <div class="card-icon">🎓</div>
+                            <h3>GPA Calculator</h3>
+                            <p>Calculate your Grade Point Average with support for different grading scales and credit hours.</p>
+                            <span class="category">Education</span>
+                        </div>
+                        <div class="calculator-card">
+                            <div class="card-icon">💰</div>
+                            <h3>Loan Calculator</h3>
+                            <p>Calculate payments for personal loans, auto loans, and other installment loans.</p>
+                            <span class="category">Finance</span>
+                            <div class="coming-soon">Coming Soon</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+            <!-- Featured Blog Posts -->
+            <section class="featured-posts">
+                <div class="container">
+                    <h2>Latest Financial Insights</h2>
+                    <div class="blog-grid">
+                        <div class="blog-card" onclick="showBlogPost('gpa-importance')">
+                            <h3>Why Your GPA Matters: From High School to College Success</h3>
+                            <p>Understanding the critical role of GPA in your academic journey and proven strategies to improve your grades.</p>
+                            <div class="blog-meta">
+                                <span class="date">Dec 8, 2024</span>
+                                <span class="category">Education</span>
+                                <span class="read-time">8 min</span>
+                            </div>
+                        </div>
+                        <div class="blog-card">
+                            <h3>10 Essential Tips for First-Time Home Buyers</h3>
+                            <p>Navigate the complex world of home buying with confidence.</p>
+                            <div class="blog-meta">
+                                <span class="date">Dec 6, 2024</span>
+                                <span class="category">Real Estate</span>
+                                <span class="read-time">5 min</span>
+                            </div>
+                        </div>
+                        <div class="blog-card">
+                            <h3>Understanding Compound Interest</h3>
+                            <p>Discover how compound interest can work for or against you.</p>
+                            <div class="blog-meta">
+                                <span class="date">Dec 5, 2024</span>
+                                <span class="category">Investment</span>
+                                <span class="read-time">7 min</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Blog Page -->
+        <div id="blog" class="page">
+            <section class="blog-header">
+                <div class="container">
+                    <h1>Financial Education Blog</h1>
+                    <p>Expert insights, practical tips, and comprehensive guides to help you make better financial decisions</p>
+                    
+                    <div class="blog-filters">
+                        <input type="text" id="blogSearch" placeholder="Search articles..." class="search-input">
+                        <select id="categoryFilter" class="category-select">
+                            <option value="All">All Categories</option>
+                            <option value="Real Estate">Real Estate</option>
+                            <option value="Investment">Investment</option>
+                            <option value="Education">Education</option>
+                            <option value="Personal Finance">Personal Finance</option>
+                            <option value="Health">Health</option>
+                        </select>
+                    </div>
+                </div>
+            </section>
+
+            <section class="blog-content">
+                <div class="container">
+                    <div id="blogResults" class="blog-grid">
+                        <!-- Blog posts will be populated by JavaScript -->
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- GPA Calculator Page -->
+        <div id="gpa" class="page">
+            <section class="calculator-header">
+                <div class="container">
+                    <h1>GPA Calculator</h1>
+                    <p>Calculate your Grade Point Average with customizable grading scales</p>
+                </div>
+            </section>
+
+            <section class="calculator-content">
+                <div class="container">
+                    <div class="calculator-layout">
+                        <div class="calculator-form">
+                            <div class="form-section">
+                                <h3>GPA Settings</h3>
+                                <div class="form-group">
+                                    <label>GPA Scale</label>
+                                    <select id="gpaScale">
+                                        <option value="4.0">4.0 Scale</option>
+                                        <option value="5.0">5.0 Scale</option>
+                                        <option value="custom">Custom Scale</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" id="weightedGPA"> Calculate Weighted GPA
+                                    </label>
+                                </div>
+                                <div id="customScaleInputs" class="form-group hidden">
+                                    <label>Custom Scale Maximum</label>
+                                    <input type="number" id="customMax" min="1" max="10" step="0.1" value="4.0">
+                                </div>
+                            </div>
+
+                            <div class="form-section">
+                                <h3>Grade Scale Reference</h3>
+                                <div id="gradeScaleReference" class="grade-scale">
+                                    <!-- Will be populated by JavaScript -->
+                                </div>
+                                <button type="button" id="editGradeScale" class="btn btn-secondary">Edit Grade Scale</button>
+                            </div>
+
+                            <div class="form-section">
+                                <h3>Course Information</h3>
+                                <div id="courseList">
+                                    <!-- Course inputs will be added here -->
+                                </div>
+                                <button type="button" id="addCourse" class="btn btn-secondary">Add Course</button>
+                            </div>
+
+                            <button type="button" id="calculateGPA" class="btn btn-primary">Calculate GPA</button>
+                        </div>
+
+                        <div class="calculator-results">
+                            <div id="gpaResults" class="results-card hidden">
+                                <!-- Results will be displayed here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Mortgage Calculator Page -->
+        <div id="mortgage" class="page">
+            <section class="calculator-header">
+                <div class="container">
+                    <h1>Mortgage Calculator</h1>
+                    <p>Calculate your monthly mortgage payments and view amortization details</p>
+                </div>
+            </section>
+
+            <section class="calculator-content">
+                <div class="container">
+                    <div class="calculator-layout">
+                        <div class="calculator-form">
+                            <div class="form-group">
+                                <label for="loanAmount">Loan Amount ($)</label>
+                                <input type="number" id="loanAmount" value="300000" min="0">
+                            </div>
+                            <div class="form-group">
+                                <label for="interestRate">Annual Interest Rate (%)</label>
+                                <input type="number" id="interestRate" value="6.5" min="0" max="30" step="0.01">
+                            </div>
+                            <div class="form-group">
+                                <label for="loanTerm">Loan Term (years)</label>
+                                <input type="number" id="loanTerm" value="30" min="1" max="50">
+                            </div>
+                            <div class="form-group">
+                                <label for="downPayment">Down Payment ($)</label>
+                                <input type="number" id="downPayment" value="60000" min="0">
+                            </div>
+                            <button type="button" id="calculateMortgage" class="btn btn-primary">Calculate Payment</button>
+                        </div>
+
+                        <div class="calculator-results">
+                            <div id="mortgageResults" class="results-card hidden">
+                                <!-- Results will be displayed here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Blog Post Detail -->
+        <div id="blogPost" class="page">
+            <div class="container">
+                <div id="blogPostContent">
+                    <!-- Blog post content will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Calculate & Learn. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
 </html>
