@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculate & Learn - Financial Tools & Education</title>
+    <title>CalcHub - Financial Tools & Education</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -15,28 +15,32 @@
         <div class="container">
             <div class="nav-brand">
                 <button class="logo-button" onclick="showPage('home')">
-                    <h1>Calculate & Learn</h1>
+                    <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="18" height="18" rx="2"/>
+                        <path d="M9 9h6v6H9z"/>
+                    </svg>
+                    <span>CalcHub</span>
                 </button>
             </div>
             <nav class="nav">
-                <a href="#home" class="nav-link active" data-page="home">Home</a>
+                <a href="#home" class="nav-link active" data-page="home" onclick="showPage('home')">Home</a>
                 <div class="nav-dropdown">
                     <button class="nav-link dropdown-toggle" onclick="toggleDropdown()">
                         Calculators ▼
                     </button>
                     <div class="dropdown-menu" id="calculatorDropdown">
-                        <a href="#mortgage" class="dropdown-item" data-page="mortgage" onclick="showPage('mortgage')">Mortgage Calculator</a>
-                        <a href="#loan" class="dropdown-item" data-page="loan" onclick="showPage('loan')">Loan Calculator</a>
-                        <a href="#gpa" class="dropdown-item" data-page="gpa" onclick="showPage('gpa')">GPA Calculator</a>
-                        <a href="#bmi" class="dropdown-item" data-page="bmi" onclick="showPage('bmi')">BMI Calculator</a>
-                        <a href="#calorie" class="dropdown-item" data-page="calorie" onclick="showPage('calorie')">Calorie Calculator</a>
-                        <a href="#scientific" class="dropdown-item" data-page="scientific" onclick="showPage('scientific')">Scientific Calculator</a>
-                        <a href="#timezone" class="dropdown-item" data-page="timezone" onclick="showPage('timezone')">Timezone Calculator</a>
+                        <a href="#mortgage" class="dropdown-item" onclick="showPage('mortgage')">Mortgage Calculator</a>
+                        <a href="#loan" class="dropdown-item" onclick="showPage('loan')">Loan Calculator</a>
+                        <a href="#gpa" class="dropdown-item" onclick="showPage('gpa')">GPA Calculator</a>
+                        <a href="#bmi" class="dropdown-item" onclick="showPage('bmi')">BMI Calculator</a>
+                        <a href="#calorie" class="dropdown-item" onclick="showPage('calorie')">Calorie Calculator</a>
+                        <a href="#scientific" class="dropdown-item" onclick="showPage('scientific')">Scientific Calculator</a>
+                        <a href="#timezone" class="dropdown-item" onclick="showPage('timezone')">Timezone Calculator</a>
                     </div>
                 </div>
-                <a href="#blog" class="nav-link" data-page="blog">Blog</a>
+                <a href="#blog" class="nav-link" data-page="blog" onclick="showPage('blog')">Blog</a>
             </nav>
-            <button class="theme-toggle" id="themeToggle">🌙</button>
+            <button class="theme-toggle" id="themeToggle" onclick="toggleDarkMode()">🌙</button>
         </div>
     </header>
 
@@ -120,32 +124,94 @@
             </section>
         </div>
 
-        <!-- Blog Page -->
-        <div id="blog" class="page">
-            <section class="blog-header">
+        <!-- Mortgage Calculator Page -->
+        <div id="mortgage" class="page">
+            <section class="calculator-header">
                 <div class="container">
-                    <h1>Financial Education Blog</h1>
-                    <p>Expert insights, practical tips, and comprehensive guides to help you make better financial decisions</p>
-                    
-                    <div class="blog-filters">
-                        <input type="text" id="blogSearch" placeholder="Search articles..." class="search-input">
-                        <select id="categoryFilter" class="category-select">
-                            <option value="All">All Categories</option>
-                            <option value="Real Estate">Real Estate</option>
-                            <option value="Investment">Investment</option>
-                            <option value="Education">Education</option>
-                            <option value="Personal Finance">Personal Finance</option>
-                            <option value="Health">Health</option>
-                            <option value="Finance">Finance</option>
-                        </select>
-                    </div>
+                    <h1>Mortgage Calculator</h1>
+                    <p>Calculate your monthly mortgage payments and view amortization details</p>
                 </div>
             </section>
 
-            <section class="blog-content">
+            <section class="calculator-content">
                 <div class="container">
-                    <div id="blogResults" class="blog-grid">
-                        <!-- Blog posts will be populated by JavaScript -->
+                    <div class="calculator-layout">
+                        <div class="calculator-form">
+                            <div class="form-group">
+                                <label for="loanAmount">Loan Amount ($)</label>
+                                <input type="number" id="loanAmount" value="300000" min="0">
+                            </div>
+                            <div class="form-group">
+                                <label for="interestRate">Annual Interest Rate (%)</label>
+                                <input type="number" id="interestRate" value="6.5" min="0" max="30" step="0.01">
+                            </div>
+                            <div class="form-group">
+                                <label for="loanTerm">Loan Term (years)</label>
+                                <input type="number" id="loanTerm" value="30" min="1" max="50">
+                            </div>
+                            <div class="form-group">
+                                <label for="downPayment">Down Payment ($)</label>
+                                <input type="number" id="downPayment" value="60000" min="0">
+                            </div>
+                            <button type="button" class="btn btn-primary" onclick="calculateMortgage()">Calculate Payment</button>
+                        </div>
+
+                        <div class="calculator-results">
+                            <div id="mortgageResults" class="results-card hidden">
+                                <!-- Results will be displayed here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- GPA Calculator Page -->
+        <div id="gpa" class="page">
+            <section class="calculator-header">
+                <div class="container">
+                    <h1>GPA Calculator</h1>
+                    <p>Calculate your Grade Point Average with customizable grading scales</p>
+                </div>
+            </section>
+
+            <section class="calculator-content">
+                <div class="container">
+                    <div class="calculator-layout">
+                        <div class="calculator-form">
+                            <div class="form-section">
+                                <h3>GPA Settings</h3>
+                                <div class="form-group">
+                                    <label>GPA Scale</label>
+                                    <select id="gpaScale">
+                                        <option value="4.0">4.0 Scale</option>
+                                        <option value="5.0">5.0 Scale</option>
+                                        <option value="custom">Custom Scale</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" id="weightedGPA"> Calculate Weighted GPA
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-section">
+                                <h3>Course Information</h3>
+                                <div id="courseList">
+                                    <!-- Course inputs will be added here -->
+                                </div>
+                                <button type="button" class="btn btn-secondary" onclick="addCourse()">Add Course</button>
+                            </div>
+
+                            <button type="button" class="btn btn-primary" onclick="calculateGPA()">Calculate GPA</button>
+                        </div>
+
+                        <div class="calculator-results">
+                            <div id="gpaResults" class="results-card hidden">
+                                <!-- Results will be displayed here -->
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -214,487 +280,98 @@
             </section>
         </div>
 
-        <!-- Calorie Calculator Page -->
-        <div id="calorie" class="page">
-            <section class="calculator-header">
-                <div class="container">
-                    <h1>Calorie Calculator</h1>
-                    <p>Calculate your daily caloric needs based on your goals</p>
-                </div>
-            </section>
-
-            <section class="calculator-content">
-                <div class="container">
-                    <div class="calculator-layout">
-                        <div class="calculator-form">
-                            <div class="form-section">
-                                <h3>Personal Information</h3>
-                                <div class="form-group">
-                                    <label>Units</label>
-                                    <select id="calorieUnits" onchange="toggleCalorieUnits()">
-                                        <option value="metric">Metric (kg, cm)</option>
-                                        <option value="imperial">Imperial (lbs, ft/in)</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label>Gender</label>
-                                    <select id="gender">
-                                        <option value="male">Male</option>
-                                        <option value="female">Female</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="age">Age (years)</label>
-                                    <input type="number" id="age" value="30" min="10" max="120">
-                                </div>
-                            </div>
-
-                            <div id="calorieMetricInputs" class="form-section">
-                                <div class="form-group">
-                                    <label for="calorieWeightKg">Weight (kg)</label>
-                                    <input type="number" id="calorieWeightKg" value="70" min="1" max="500">
-                                </div>
-                                <div class="form-group">
-                                    <label for="calorieHeightCm">Height (cm)</label>
-                                    <input type="number" id="calorieHeightCm" value="175" min="50" max="300">
-                                </div>
-                            </div>
-
-                            <div id="calorieImperialInputs" class="form-section hidden">
-                                <div class="form-group">
-                                    <label for="calorieWeightLbs">Weight (lbs)</label>
-                                    <input type="number" id="calorieWeightLbs" value="154" min="1" max="1000">
-                                </div>
-                                <div class="form-group">
-                                    <label for="calorieHeightFt">Height (feet)</label>
-                                    <input type="number" id="calorieHeightFt" value="5" min="1" max="10">
-                                </div>
-                                <div class="form-group">
-                                    <label for="calorieHeightIn">Height (inches)</label>
-                                    <input type="number" id="calorieHeightIn" value="9" min="0" max="11">
-                                </div>
-                            </div>
-
-                            <div class="form-section">
-                                <h3>Activity Level</h3>
-                                <div class="form-group">
-                                    <label>Activity Level</label>
-                                    <select id="activityLevel">
-                                        <option value="1.2">Sedentary (little/no exercise)</option>
-                                        <option value="1.375">Lightly active (light exercise 1-3 days/week)</option>
-                                        <option value="1.55" selected>Moderately active (moderate exercise 3-5 days/week)</option>
-                                        <option value="1.725">Very active (hard exercise 6-7 days/week)</option>
-                                        <option value="1.9">Super active (very hard exercise/physical job)</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="form-section">
-                                <h3>Goal</h3>
-                                <div class="form-group">
-                                    <label>Weight Goal</label>
-                                    <select id="weightGoal">
-                                        <option value="-0.5">Lose 1 lb per week</option>
-                                        <option value="-0.25">Lose 0.5 lb per week</option>
-                                        <option value="0" selected>Maintain weight</option>
-                                        <option value="0.25">Gain 0.5 lb per week</option>
-                                        <option value="0.5">Gain 1 lb per week</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <button type="button" class="btn btn-primary" onclick="calculateCalories()">Calculate Calories</button>
-                        </div>
-
-                        <div class="calculator-results">
-                            <div id="calorieResults" class="results-card hidden">
-                                <!-- Results will be displayed here -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </div>
-
-        <!-- Scientific Calculator Page -->
-        <div id="scientific" class="page">
-            <section class="calculator-header">
-                <div class="container">
-                    <h1>Scientific Calculator</h1>
-                    <p>Advanced calculator with scientific functions</p>
-                </div>
-            </section>
-
-            <section class="calculator-content">
-                <div class="container">
-                    <div class="scientific-calculator">
-                        <div class="calculator-display">
-                            <input type="text" id="scientificDisplay" readonly placeholder="0">
-                        </div>
-                        <div class="calculator-buttons">
-                            <button onclick="clearDisplay()" class="btn-clear">C</button>
-                            <button onclick="clearEntry()" class="btn-clear">CE</button>
-                            <button onclick="backspace()" class="btn-operator">⌫</button>
-                            <button onclick="appendToDisplay('/')" class="btn-operator">÷</button>
-                            
-                            <button onclick="appendToDisplay('sin(')" class="btn-function">sin</button>
-                            <button onclick="appendToDisplay('cos(')" class="btn-function">cos</button>
-                            <button onclick="appendToDisplay('tan(')" class="btn-function">tan</button>
-                            <button onclick="appendToDisplay('*')" class="btn-operator">×</button>
-                            
-                            <button onclick="appendToDisplay('log(')" class="btn-function">log</button>
-                            <button onclick="appendToDisplay('ln(')" class="btn-function">ln</button>
-                            <button onclick="appendToDisplay('sqrt(')" class="btn-function">√</button>
-                            <button onclick="appendToDisplay('-')" class="btn-operator">-</button>
-                            
-                            <button onclick="appendToDisplay('(')" class="btn-operator">(</button>
-                            <button onclick="appendToDisplay(')')" class="btn-operator">)</button>
-                            <button onclick="appendToDisplay('^')" class="btn-operator">^</button>
-                            <button onclick="appendToDisplay('+')" class="btn-operator">+</button>
-                            
-                            <button onclick="appendToDisplay('7')" class="btn-number">7</button>
-                            <button onclick="appendToDisplay('8')" class="btn-number">8</button>
-                            <button onclick="appendToDisplay('9')" class="btn-number">9</button>
-                            <button onclick="calculateScientific()" class="btn-equals" rowspan="2">=</button>
-                            
-                            <button onclick="appendToDisplay('4')" class="btn-number">4</button>
-                            <button onclick="appendToDisplay('5')" class="btn-number">5</button>
-                            <button onclick="appendToDisplay('6')" class="btn-number">6</button>
-                            
-                            <button onclick="appendToDisplay('1')" class="btn-number">1</button>
-                            <button onclick="appendToDisplay('2')" class="btn-number">2</button>
-                            <button onclick="appendToDisplay('3')" class="btn-number">3</button>
-                            
-                            <button onclick="appendToDisplay('0')" class="btn-number btn-zero">0</button>
-                            <button onclick="appendToDisplay('.')" class="btn-number">.</button>
-                            <button onclick="appendToDisplay('3.14159')" class="btn-function">π</button>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </div>
-
-        <!-- Timezone Calculator Page -->
-        <div id="timezone" class="page">
-            <section class="calculator-header">
-                <div class="container">
-                    <h1>Timezone Calculator</h1>
-                    <p>Convert time between different timezones</p>
-                </div>
-            </section>
-
-            <section class="calculator-content">
-                <div class="container">
-                    <div class="calculator-layout">
-                        <div class="calculator-form">
-                            <div class="form-section">
-                                <h3>Source Time</h3>
-                                <div class="form-group">
-                                    <label for="sourceDate">Date</label>
-                                    <input type="date" id="sourceDate">
-                                </div>
-                                <div class="form-group">
-                                    <label for="sourceTime">Time</label>
-                                    <input type="time" id="sourceTime">
-                                </div>
-                                <div class="form-group">
-                                    <label for="sourceTimezone">Source Timezone</label>
-                                    <select id="sourceTimezone">
-                                        <option value="UTC">UTC</option>
-                                        <option value="America/New_York">Eastern Time (ET)</option>
-                                        <option value="America/Chicago">Central Time (CT)</option>
-                                        <option value="America/Denver">Mountain Time (MT)</option>
-                                        <option value="America/Los_Angeles">Pacific Time (PT)</option>
-                                        <option value="Europe/London">London (GMT)</option>
-                                        <option value="Europe/Paris">Paris (CET)</option>
-                                        <option value="Europe/Berlin">Berlin (CET)</option>
-                                        <option value="Asia/Tokyo">Tokyo (JST)</option>
-                                        <option value="Asia/Shanghai">Beijing (CST)</option>
-                                        <option value="Asia/Dubai">Dubai (GST)</option>
-                                        <option value="Australia/Sydney">Sydney (AEDT)</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="form-section">
-                                <h3>Target Timezones</h3>
-                                <div id="targetTimezones">
-                                    <div class="timezone-conversion">
-                                        <div class="form-group">
-                                            <label>Convert to</label>
-                                            <select class="target-timezone">
-                                                <option value="America/New_York">Eastern Time (ET)</option>
-                                                <option value="America/Chicago">Central Time (CT)</option>
-                                                <option value="America/Denver">Mountain Time (MT)</option>
-                                                <option value="America/Los_Angeles">Pacific Time (PT)</option>
-                                                <option value="Europe/London">London (GMT)</option>
-                                                <option value="Europe/Paris">Paris (CET)</option>
-                                                <option value="Europe/Berlin">Berlin (CET)</option>
-                                                <option value="Asia/Tokyo">Tokyo (JST)</option>
-                                                <option value="Asia/Shanghai">Beijing (CST)</option>
-                                                <option value="Asia/Dubai">Dubai (GST)</option>
-                                                <option value="Australia/Sydney">Sydney (AEDT)</option>
-                                                <option value="UTC">UTC</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <button type="button" class="btn btn-secondary" onclick="addTimezone()">Add Timezone</button>
-                            </div>
-
-                            <button type="button" class="btn btn-primary" onclick="convertTimezones()">Convert Time</button>
-                        </div>
-
-                        <div class="calculator-results">
-                            <div id="timezoneResults" class="results-card hidden">
-                                <!-- Results will be displayed here -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </div>
-
-        <!-- Loan Calculator Page -->
+        <!-- Additional calculator pages would go here -->
         <div id="loan" class="page">
             <section class="calculator-header">
                 <div class="container">
                     <h1>Loan Calculator</h1>
-                    <p>Calculate amortized loans, deferred payment loans, and bond valuations</p>
-                </div>
-            </section>
-
-            <section class="calculator-content">
-                <div class="container">
-                    <div class="calculator-layout">
-                        <div class="calculator-form">
-                            <div class="form-section">
-                                <h3>Loan Type</h3>
-                                <div class="form-group">
-                                    <label>Select Loan Type</label>
-                                    <select id="loanType" onchange="toggleLoanInputs()">
-                                        <option value="amortized">Amortized Loan</option>
-                                        <option value="deferred">Deferred Payment Loan</option>
-                                        <option value="bond">Bond Valuation</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <!-- Amortized Loan Inputs -->
-                            <div id="amortizedInputs" class="form-section">
-                                <h3>Amortized Loan Details</h3>
-                                <div class="form-group">
-                                    <label for="amortizedPrincipal">Principal Amount ($)</label>
-                                    <input type="number" id="amortizedPrincipal" value="250000" min="0">
-                                </div>
-                                <div class="form-group">
-                                    <label for="amortizedRate">Annual Interest Rate (%)</label>
-                                    <input type="number" id="amortizedRate" value="5.5" min="0" max="30" step="0.01">
-                                </div>
-                                <div class="form-group">
-                                    <label for="amortizedTerm">Loan Term (years)</label>
-                                    <input type="number" id="amortizedTerm" value="30" min="1" max="50">
-                                </div>
-                                <div class="form-group">
-                                    <label>Payment Frequency</label>
-                                    <select id="paymentFrequency">
-                                        <option value="monthly">Monthly</option>
-                                        <option value="biweekly">Bi-weekly</option>
-                                        <option value="quarterly">Quarterly</option>
-                                        <option value="annually">Annually</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <!-- Deferred Payment Loan Inputs -->
-                            <div id="deferredInputs" class="form-section hidden">
-                                <h3>Deferred Payment Loan Details</h3>
-                                <div class="form-group">
-                                    <label for="deferredPrincipal">Principal Amount ($)</label>
-                                    <input type="number" id="deferredPrincipal" value="100000" min="0">
-                                </div>
-                                <div class="form-group">
-                                    <label for="deferredRate">Annual Interest Rate (%)</label>
-                                    <input type="number" id="deferredRate" value="6.0" min="0" max="30" step="0.01">
-                                </div>
-                                <div class="form-group">
-                                    <label for="deferredPeriod">Deferment Period (years)</label>
-                                    <input type="number" id="deferredPeriod" value="5" min="0" max="10">
-                                </div>
-                                <div class="form-group">
-                                    <label for="repaymentTerm">Repayment Term (years)</label>
-                                    <input type="number" id="repaymentTerm" value="20" min="1" max="50">
-                                </div>
-                                <div class="form-group">
-                                    <label>Compounding During Deferment</label>
-                                    <select id="deferredCompounding">
-                                        <option value="simple">Simple Interest</option>
-                                        <option value="compound">Compound Interest</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <!-- Bond Inputs -->
-                            <div id="bondInputs" class="form-section hidden">
-                                <h3>Bond Valuation Details</h3>
-                                <div class="form-group">
-                                    <label for="faceValue">Face Value ($)</label>
-                                    <input type="number" id="faceValue" value="1000" min="0">
-                                </div>
-                                <div class="form-group">
-                                    <label for="couponRate">Annual Coupon Rate (%)</label>
-                                    <input type="number" id="couponRate" value="4.5" min="0" max="20" step="0.01">
-                                </div>
-                                <div class="form-group">
-                                    <label for="marketRate">Market Interest Rate (%)</label>
-                                    <input type="number" id="marketRate" value="5.0" min="0" max="20" step="0.01">
-                                </div>
-                                <div class="form-group">
-                                    <label for="yearsToMaturity">Years to Maturity</label>
-                                    <input type="number" id="yearsToMaturity" value="10" min="1" max="50">
-                                </div>
-                                <div class="form-group">
-                                    <label>Payment Frequency</label>
-                                    <select id="bondFrequency">
-                                        <option value="annual">Annual</option>
-                                        <option value="semiannual">Semi-annual</option>
-                                        <option value="quarterly">Quarterly</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <button type="button" id="calculateLoan" class="btn btn-primary" onclick="calculateLoan()">Calculate</button>
-                        </div>
-
-                        <div class="calculator-results">
-                            <div id="loanResults" class="results-card hidden">
-                                <!-- Results will be displayed here -->
-                            </div>
-                        </div>
-                    </div>
+                    <p>Coming Soon...</p>
                 </div>
             </section>
         </div>
 
-        <!-- GPA Calculator Page -->
-        <div id="gpa" class="page">
+        <div id="calorie" class="page">
             <section class="calculator-header">
                 <div class="container">
-                    <h1>GPA Calculator</h1>
-                    <p>Calculate your Grade Point Average with customizable grading scales</p>
-                </div>
-            </section>
-
-            <section class="calculator-content">
-                <div class="container">
-                    <div class="calculator-layout">
-                        <div class="calculator-form">
-                            <div class="form-section">
-                                <h3>GPA Settings</h3>
-                                <div class="form-group">
-                                    <label>GPA Scale</label>
-                                    <select id="gpaScale">
-                                        <option value="4.0">4.0 Scale</option>
-                                        <option value="5.0">5.0 Scale</option>
-                                        <option value="custom">Custom Scale</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label>
-                                        <input type="checkbox" id="weightedGPA"> Calculate Weighted GPA
-                                    </label>
-                                </div>
-                                <div id="customScaleInputs" class="form-group hidden">
-                                    <label>Custom Scale Maximum</label>
-                                    <input type="number" id="customMax" min="1" max="10" step="0.1" value="4.0">
-                                </div>
-                            </div>
-
-                            <div class="form-section">
-                                <h3>Grade Scale Reference</h3>
-                                <div id="gradeScaleReference" class="grade-scale">
-                                    <!-- Will be populated by JavaScript -->
-                                </div>
-                                <button type="button" id="editGradeScale" class="btn btn-secondary">Edit Grade Scale</button>
-                            </div>
-
-                            <div class="form-section">
-                                <h3>Course Information</h3>
-                                <div id="courseList">
-                                    <!-- Course inputs will be added here -->
-                                </div>
-                                <button type="button" id="addCourse" class="btn btn-secondary">Add Course</button>
-                            </div>
-
-                            <button type="button" id="calculateGPA" class="btn btn-primary">Calculate GPA</button>
-                        </div>
-
-                        <div class="calculator-results">
-                            <div id="gpaResults" class="results-card hidden">
-                                <!-- Results will be displayed here -->
-                            </div>
-                        </div>
-                    </div>
+                    <h1>Calorie Calculator</h1>
+                    <p>Coming Soon...</p>
                 </div>
             </section>
         </div>
 
-        <!-- Mortgage Calculator Page -->
-        <div id="mortgage" class="page">
+        <div id="scientific" class="page">
             <section class="calculator-header">
                 <div class="container">
-                    <h1>Mortgage Calculator</h1>
-                    <p>Calculate your monthly mortgage payments and view amortization details</p>
-                </div>
-            </section>
-
-            <section class="calculator-content">
-                <div class="container">
-                    <div class="calculator-layout">
-                        <div class="calculator-form">
-                            <div class="form-group">
-                                <label for="loanAmount">Loan Amount ($)</label>
-                                <input type="number" id="loanAmount" value="300000" min="0">
-                            </div>
-                            <div class="form-group">
-                                <label for="interestRate">Annual Interest Rate (%)</label>
-                                <input type="number" id="interestRate" value="6.5" min="0" max="30" step="0.01">
-                            </div>
-                            <div class="form-group">
-                                <label for="loanTerm">Loan Term (years)</label>
-                                <input type="number" id="loanTerm" value="30" min="1" max="50">
-                            </div>
-                            <div class="form-group">
-                                <label for="downPayment">Down Payment ($)</label>
-                                <input type="number" id="downPayment" value="60000" min="0">
-                            </div>
-                            <button type="button" id="calculateMortgage" class="btn btn-primary">Calculate Payment</button>
-                        </div>
-
-                        <div class="calculator-results">
-                            <div id="mortgageResults" class="results-card hidden">
-                                <!-- Results will be displayed here -->
-                            </div>
-                        </div>
-                    </div>
+                    <h1>Scientific Calculator</h1>
+                    <p>Coming Soon...</p>
                 </div>
             </section>
         </div>
 
-        <!-- Blog Post Detail -->
-        <div id="blogPost" class="page">
-            <div class="container">
-                <div id="blogPostContent">
-                    <!-- Blog post content will be loaded here -->
+        <div id="timezone" class="page">
+            <section class="calculator-header">
+                <div class="container">
+                    <h1>Timezone Calculator</h1>
+                    <p>Coming Soon...</p>
                 </div>
-            </div>
+            </section>
+        </div>
+
+        <!-- Blog Page -->
+        <div id="blog" class="page">
+            <section class="blog-header">
+                <div class="container">
+                    <h1>Financial Education Blog</h1>
+                    <p>Expert insights, practical tips, and comprehensive guides to help you make better financial decisions</p>
+                </div>
+            </section>
+
+            <section class="blog-content">
+                <div class="container">
+                    <div class="blog-grid">
+                        <div class="blog-card">
+                            <h3>Understanding GPA and Its Importance</h3>
+                            <p>Learn about GPA calculation methods and why it matters for your academic future.</p>
+                            <span class="category">Education</span>
+                        </div>
+                        <div class="blog-card">
+                            <h3>Mortgage Tips for First-Time Buyers</h3>
+                            <p>Essential advice for navigating your first home purchase.</p>
+                            <span class="category">Real Estate</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </div>
     </main>
 
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
-            <p>&copy; 2024 Calculate & Learn. All rights reserved.</p>
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>CalcHub</h3>
+                    <p>Your go-to destination for financial calculators and educational content.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Calculators</h4>
+                    <ul>
+                        <li><a href="#mortgage" onclick="showPage('mortgage')">Mortgage Calculator</a></li>
+                        <li><a href="#gpa" onclick="showPage('gpa')">GPA Calculator</a></li>
+                        <li><a href="#bmi" onclick="showPage('bmi')">BMI Calculator</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="#blog" onclick="showPage('blog')">Financial Blog</a></li>
+                        <li><a href="#blog" onclick="showPage('blog')">Investment Tips</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 CalcHub. All rights reserved.</p>
+            </div>
         </div>
     </footer>
 
