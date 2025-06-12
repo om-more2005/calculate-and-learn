@@ -35,17 +35,23 @@ const Header = ({ darkMode, toggleDarkMode }: HeaderProps) => {
                 <Link to="/calculator/mortgage" className="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">
                   Mortgage Calculator
                 </Link>
-                <Link to="/calculator/gpa" className="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">
-                  GPA Calculator
-                </Link>
                 <Link to="/calculator/loan" className="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">
                   Loan Calculator
                 </Link>
-                <Link to="/calculator/investment" className="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">
-                  Investment Calculator
+                <Link to="/calculator/gpa" className="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">
+                  GPA Calculator
                 </Link>
                 <Link to="/calculator/bmi" className="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">
                   BMI Calculator
+                </Link>
+                <Link to="/calculator/calorie" className="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">
+                  Calorie Calculator
+                </Link>
+                <Link to="/calculator/scientific" className="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">
+                  Scientific Calculator
+                </Link>
+                <Link to="/calculator/timezone" className="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">
+                  Timezone Calculator
                 </Link>
               </div>
             </div>
@@ -85,17 +91,23 @@ const Header = ({ darkMode, toggleDarkMode }: HeaderProps) => {
                 <Link to="/calculator/mortgage" className="block text-gray-600 dark:text-gray-400 hover:text-blue-600">
                   Mortgage Calculator
                 </Link>
-                <Link to="/calculator/gpa" className="block text-gray-600 dark:text-gray-400 hover:text-blue-600">
-                  GPA Calculator
-                </Link>
                 <Link to="/calculator/loan" className="block text-gray-600 dark:text-gray-400 hover:text-blue-600">
                   Loan Calculator
                 </Link>
-                <Link to="/calculator/investment" className="block text-gray-600 dark:text-gray-400 hover:text-blue-600">
-                  Investment Calculator
+                <Link to="/calculator/gpa" className="block text-gray-600 dark:text-gray-400 hover:text-blue-600">
+                  GPA Calculator
                 </Link>
                 <Link to="/calculator/bmi" className="block text-gray-600 dark:text-gray-400 hover:text-blue-600">
                   BMI Calculator
+                </Link>
+                <Link to="/calculator/calorie" className="block text-gray-600 dark:text-gray-400 hover:text-blue-600">
+                  Calorie Calculator
+                </Link>
+                <Link to="/calculator/scientific" className="block text-gray-600 dark:text-gray-400 hover:text-blue-600">
+                  Scientific Calculator
+                </Link>
+                <Link to="/calculator/timezone" className="block text-gray-600 dark:text-gray-400 hover:text-blue-600">
+                  Timezone Calculator
                 </Link>
               </div>
             </div>
