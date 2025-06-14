@@ -1,4 +1,3 @@
-
 // Global variables
 let isDarkMode = false;
 let courses = [];
@@ -20,13 +19,6 @@ function initializeApp() {
     addCourse();
     
     console.log('App initialized successfully');
-}
-
-// Ensure the script runs when DOM is ready
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initializeApp);
-} else {
-    initializeApp();
 }
 
 // Navigation
@@ -93,14 +85,20 @@ function toggleDarkMode() {
 
 function enableDarkMode() {
     document.body.classList.add('dark');
-    document.getElementById('themeToggle').textContent = '☀️';
+    const themeToggle = document.getElementById('themeToggle');
+    if (themeToggle) {
+        themeToggle.textContent = '☀️';
+    }
     localStorage.setItem('theme', 'dark');
     isDarkMode = true;
 }
 
 function disableDarkMode() {
     document.body.classList.remove('dark');
-    document.getElementById('themeToggle').textContent = '🌙';
+    const themeToggle = document.getElementById('themeToggle');
+    if (themeToggle) {
+        themeToggle.textContent = '🌙';
+    }
     localStorage.setItem('theme', 'light');
     isDarkMode = false;
 }
@@ -346,7 +344,7 @@ document.addEventListener('click', function(event) {
     const dropdown = document.getElementById('calculatorDropdown');
     const dropdownToggle = document.querySelector('.dropdown-toggle');
     
-    if (dropdown && !dropdown.contains(event.target) && !dropdownToggle.contains(event.target)) {
+    if (dropdown && dropdownToggle && !dropdown.contains(event.target) && !dropdownToggle.contains(event.target)) {
         dropdown.style.opacity = '0';
         dropdown.style.visibility = 'hidden';
     }
@@ -356,3 +354,28 @@ document.addEventListener('click', function(event) {
 document.addEventListener('submit', function(event) {
     event.preventDefault();
 });
+
+// Make functions globally available
+window.showPage = showPage;
+window.toggleDropdown = toggleDropdown;
+window.toggleDarkMode = toggleDarkMode;
+window.calculateMortgage = calculateMortgage;
+window.addCourse = addCourse;
+window.removeCourse = removeCourse;
+window.calculateGPA = calculateGPA;
+window.toggleBMIUnits = toggleBMIUnits;
+window.calculateBMI = calculateBMI;
+
+// Initialize when DOM is ready
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM loaded, initializing app...');
+    initializeApp();
+});
+
+// Also initialize if DOM is already ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeApp);
+} else {
+    console.log('DOM already ready, initializing app...');
+    initializeApp();
+}
