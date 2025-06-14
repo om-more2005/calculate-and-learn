@@ -4,11 +4,9 @@ let isDarkMode = false;
 let courses = [];
 
 // Initialize the application
-document.addEventListener('DOMContentLoaded', function() {
-    initializeApp();
-});
-
 function initializeApp() {
+    console.log('Initializing app...');
+    
     // Check for saved theme preference
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
@@ -20,10 +18,21 @@ function initializeApp() {
     
     // Initialize GPA calculator
     addCourse();
+    
+    console.log('App initialized successfully');
+}
+
+// Ensure the script runs when DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeApp);
+} else {
+    initializeApp();
 }
 
 // Navigation
 function showPage(pageId) {
+    console.log('Showing page:', pageId);
+    
     // Hide all pages
     const pages = document.querySelectorAll('.page');
     pages.forEach(page => page.classList.remove('active'));
@@ -32,6 +41,8 @@ function showPage(pageId) {
     const targetPage = document.getElementById(pageId);
     if (targetPage) {
         targetPage.classList.add('active');
+    } else {
+        console.error('Page not found:', pageId);
     }
     
     // Update nav links
@@ -53,7 +64,13 @@ function showPage(pageId) {
 
 // Dropdown functionality
 function toggleDropdown() {
+    console.log('Toggling dropdown...');
     const dropdown = document.getElementById('calculatorDropdown');
+    if (!dropdown) {
+        console.error('Dropdown element not found');
+        return;
+    }
+    
     const isVisible = dropdown.style.visibility === 'visible';
     
     if (isVisible) {
