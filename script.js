@@ -1,11 +1,14 @@
+
 // Global variables
 let isDarkMode = false;
 let courses = [];
 
 // Initialize the application
+document.addEventListener('DOMContentLoaded', function() {
+    initializeApp();
+});
+
 function initializeApp() {
-    console.log('Initializing app...');
-    
     // Check for saved theme preference
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
@@ -17,14 +20,10 @@ function initializeApp() {
     
     // Initialize GPA calculator
     addCourse();
-    
-    console.log('App initialized successfully');
 }
 
 // Navigation
 function showPage(pageId) {
-    console.log('Showing page:', pageId);
-    
     // Hide all pages
     const pages = document.querySelectorAll('.page');
     pages.forEach(page => page.classList.remove('active'));
@@ -33,8 +32,6 @@ function showPage(pageId) {
     const targetPage = document.getElementById(pageId);
     if (targetPage) {
         targetPage.classList.add('active');
-    } else {
-        console.error('Page not found:', pageId);
     }
     
     // Update nav links
@@ -56,13 +53,7 @@ function showPage(pageId) {
 
 // Dropdown functionality
 function toggleDropdown() {
-    console.log('Toggling dropdown...');
     const dropdown = document.getElementById('calculatorDropdown');
-    if (!dropdown) {
-        console.error('Dropdown element not found');
-        return;
-    }
-    
     const isVisible = dropdown.style.visibility === 'visible';
     
     if (isVisible) {
@@ -85,20 +76,14 @@ function toggleDarkMode() {
 
 function enableDarkMode() {
     document.body.classList.add('dark');
-    const themeToggle = document.getElementById('themeToggle');
-    if (themeToggle) {
-        themeToggle.textContent = '☀️';
-    }
+    document.getElementById('themeToggle').textContent = '☀️';
     localStorage.setItem('theme', 'dark');
     isDarkMode = true;
 }
 
 function disableDarkMode() {
     document.body.classList.remove('dark');
-    const themeToggle = document.getElementById('themeToggle');
-    if (themeToggle) {
-        themeToggle.textContent = '🌙';
-    }
+    document.getElementById('themeToggle').textContent = '🌙';
     localStorage.setItem('theme', 'light');
     isDarkMode = false;
 }
@@ -344,7 +329,7 @@ document.addEventListener('click', function(event) {
     const dropdown = document.getElementById('calculatorDropdown');
     const dropdownToggle = document.querySelector('.dropdown-toggle');
     
-    if (dropdown && dropdownToggle && !dropdown.contains(event.target) && !dropdownToggle.contains(event.target)) {
+    if (dropdown && !dropdown.contains(event.target) && !dropdownToggle.contains(event.target)) {
         dropdown.style.opacity = '0';
         dropdown.style.visibility = 'hidden';
     }
@@ -354,28 +339,3 @@ document.addEventListener('click', function(event) {
 document.addEventListener('submit', function(event) {
     event.preventDefault();
 });
-
-// Make functions globally available
-window.showPage = showPage;
-window.toggleDropdown = toggleDropdown;
-window.toggleDarkMode = toggleDarkMode;
-window.calculateMortgage = calculateMortgage;
-window.addCourse = addCourse;
-window.removeCourse = removeCourse;
-window.calculateGPA = calculateGPA;
-window.toggleBMIUnits = toggleBMIUnits;
-window.calculateBMI = calculateBMI;
-
-// Initialize when DOM is ready
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOM loaded, initializing app...');
-    initializeApp();
-});
-
-// Also initialize if DOM is already ready
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initializeApp);
-} else {
-    console.log('DOM already ready, initializing app...');
-    initializeApp();
-}
