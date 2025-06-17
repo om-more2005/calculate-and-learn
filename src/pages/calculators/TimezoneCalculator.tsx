@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Clock } from 'lucide-react';
+import { Clock, Globe } from 'lucide-react';
 import AdSpace from '../../components/AdSpace';
 
 const TimezoneCalculator = () => {
@@ -9,89 +9,128 @@ const TimezoneCalculator = () => {
   const [inputTime, setInputTime] = useState('12:00');
   const [inputDate, setInputDate] = useState(new Date().toISOString().split('T')[0]);
   const [convertedDateTime, setConvertedDateTime] = useState('');
+  const [currentTimes, setCurrentTimes] = useState({});
 
   const timezones = [
-    { value: 'UTC', label: 'UTC (Coordinated Universal Time)' },
-    { value: 'America/New_York', label: 'Eastern Time (US & Canada)' },
-    { value: 'America/Chicago', label: 'Central Time (US & Canada)' },
-    { value: 'America/Denver', label: 'Mountain Time (US & Canada)' },
-    { value: 'America/Los_Angeles', label: 'Pacific Time (US & Canada)' },
-    { value: 'Europe/London', label: 'London (GMT/BST)' },
-    { value: 'Europe/Paris', label: 'Paris (CET/CEST)' },
-    { value: 'Europe/Berlin', label: 'Berlin (CET/CEST)' },
-    { value: 'Asia/Tokyo', label: 'Tokyo (JST)' },
-    { value: 'Asia/Shanghai', label: 'Shanghai (CST)' },
-    { value: 'Asia/Kolkata', label: 'Mumbai (IST)' },
-    { value: 'Australia/Sydney', label: 'Sydney (AEST/AEDT)' },
-    { value: 'Pacific/Auckland', label: 'Auckland (NZST/NZDT)' }
+    { value: 'UTC', label: 'UTC (Coordinated Universal Time)', offset: '+00:00' },
+    { value: 'America/New_York', label: 'Eastern Time (US & Canada)', offset: '-05:00/-04:00' },
+    { value: 'America/Chicago', label: 'Central Time (US & Canada)', offset: '-06:00/-05:00' },
+    { value: 'America/Denver', label: 'Mountain Time (US & Canada)', offset: '-07:00/-06:00' },
+    { value: 'America/Los_Angeles', label: 'Pacific Time (US & Canada)', offset: '-08:00/-07:00' },
+    { value: 'Europe/London', label: 'London (GMT/BST)', offset: '+00:00/+01:00' },
+    { value: 'Europe/Paris', label: 'Paris (CET/CEST)', offset: '+01:00/+02:00' },
+    { value: 'Europe/Berlin', label: 'Berlin (CET/CEST)', offset: '+01:00/+02:00' },
+    { value: 'Asia/Tokyo', label: 'Tokyo (JST)', offset: '+09:00' },
+    { value: 'Asia/Shanghai', label: 'Shanghai (CST)', offset: '+08:00' },
+    { value: 'Asia/Kolkata', label: 'Mumbai (IST)', offset: '+05:30' },
+    { value: 'Australia/Sydney', label: 'Sydney (AEST/AEDT)', offset: '+10:00/+11:00' },
+    { value: 'Pacific/Auckland', label: 'Auckland (NZST/NZDT)', offset: '+12:00/+13:00' }
   ];
 
   useEffect(() => {
     convertTime();
+    updateCurrentTimes();
+    // Update current times every minute
+    const interval = setInterval(updateCurrentTimes, 60000);
+    return () => clearInterval(interval);
   }, [fromTimezone, toTimezone, inputTime, inputDate]);
 
   const convertTime = () => {
     try {
       // Create a date object with the input date and time
       const dateTimeString = `${inputDate}T${inputTime}:00`;
-      
-      // Create date object assuming the input is in the "from" timezone
       const inputDateTime = new Date(dateTimeString);
       
-      // Format for display in the target timezone
+      // Check if the date is valid
+      if (isNaN(inputDateTime.getTime())) {
+        setConvertedDateTime('Invalid date/time');
+        return;
+      }
+
+      // For timezone conversion, we need to handle the source timezone properly
+      // This is simplified - in production, you'd use a library like moment-timezone or date-fns-tz
+      const converted = convertTimezone(inputDateTime, fromTimezone, toTimezone);
+      
       const options = {
-        timeZone: toTimezone,
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: true
-      };
-      
-      // For proper timezone conversion, we need to adjust for the source timezone
-      const fromOptions = { timeZone: fromTimezone };
-      const toOptions = { timeZone: toTimezone };
-      
-      // Get the offset difference
-      const fromOffset = getTimezoneOffset(inputDateTime, fromTimezone);
-      const toOffset = getTimezoneOffset(inputDateTime, toTimezone);
-      
-      // Adjust the time
-      const adjustedTime = new Date(inputDateTime.getTime() + (fromOffset - toOffset) * 60000);
-      
-      const converted = adjustedTime.toLocaleString('en-US', {
-        timeZone: toTimezone,
         weekday: 'long',
         year: 'numeric',
         month: 'long',
         day: 'numeric',
         hour: '2-digit',
         minute: '2-digit',
-        hour12: true
-      });
+        hour12: true,
+        timeZoneName: 'short'
+      };
       
-      setConvertedDateTime(converted);
+      setConvertedDateTime(converted.toLocaleString('en-US', {
+        ...options,
+        timeZone: toTimezone
+      }));
     } catch (error) {
-      setConvertedDateTime('Invalid date/time');
+      console.error('Timezone conversion error:', error);
+      setConvertedDateTime('Error converting timezone');
     }
   };
 
-  const getTimezoneOffset = (date, timezone) => {
-    const utc1 = new Date(date.toLocaleString('en-US', { timeZone: 'UTC' }));
-    const utc2 = new Date(date.toLocaleString('en-US', { timeZone: timezone }));
-    return (utc2.getTime() - utc1.getTime()) / 60000;
+  const convertTimezone = (dateTime, fromTz, toTz) => {
+    // This is a simplified conversion - in production use proper timezone libraries
+    // For now, we'll assume the input time is in the "from" timezone and convert to "to" timezone
+    
+    // Get the timezone offset for both zones
+    const fromOffset = getTimezoneOffset(fromTz);
+    const toOffset = getTimezoneOffset(toTz);
+    
+    // Calculate the difference in minutes
+    const offsetDiff = (toOffset - fromOffset) * 60;
+    
+    // Apply the offset
+    return new Date(dateTime.getTime() + offsetDiff * 60000);
   };
 
-  const getCurrentTimeInTimezone = (timezone) => {
+  const getTimezoneOffset = (timezone) => {
+    // Simplified timezone offset mapping (in hours)
+    const offsets = {
+      'UTC': 0,
+      'America/New_York': -5, // EST (simplified, doesn't account for DST)
+      'America/Chicago': -6,
+      'America/Denver': -7,
+      'America/Los_Angeles': -8,
+      'Europe/London': 0,
+      'Europe/Paris': 1,
+      'Europe/Berlin': 1,
+      'Asia/Tokyo': 9,
+      'Asia/Shanghai': 8,
+      'Asia/Kolkata': 5.5,
+      'Australia/Sydney': 10,
+      'Pacific/Auckland': 12
+    };
+    return offsets[timezone] || 0;
+  };
+
+  const updateCurrentTimes = () => {
     const now = new Date();
-    return now.toLocaleString('en-US', {
-      timeZone: timezone,
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: true
+    const times = {};
+    
+    timezones.forEach(tz => {
+      try {
+        times[tz.value] = now.toLocaleString('en-US', {
+          timeZone: tz.value,
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: true
+        });
+      } catch (error) {
+        times[tz.value] = 'N/A';
+      }
     });
+    
+    setCurrentTimes(times);
+  };
+
+  const setCurrentTime = () => {
+    const now = new Date();
+    setInputDate(now.toISOString().split('T')[0]);
+    setInputTime(now.toTimeString().slice(0, 5));
   };
 
   return (
@@ -131,7 +170,7 @@ const TimezoneCalculator = () => {
                   ))}
                 </select>
                 <p className="text-xs text-gray-500 mt-1">
-                  Current time: {getCurrentTimeInTimezone(fromTimezone)}
+                  Current time: {currentTimes[fromTimezone] || 'Loading...'}
                 </p>
               </div>
 
@@ -149,7 +188,7 @@ const TimezoneCalculator = () => {
                   ))}
                 </select>
                 <p className="text-xs text-gray-500 mt-1">
-                  Current time: {getCurrentTimeInTimezone(toTimezone)}
+                  Current time: {currentTimes[toTimezone] || 'Loading...'}
                 </p>
               </div>
 
@@ -177,6 +216,13 @@ const TimezoneCalculator = () => {
                   />
                 </div>
               </div>
+
+              <button
+                onClick={setCurrentTime}
+                className="w-full bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200"
+              >
+                Use Current Time
+              </button>
             </div>
 
             {/* Ad Space */}
@@ -189,7 +235,7 @@ const TimezoneCalculator = () => {
           <div className="space-y-6">
             <div className="bg-blue-600 text-white rounded-lg shadow-lg p-6">
               <h2 className="text-2xl font-semibold mb-4">Converted Time</h2>
-              <div className="text-lg font-mono mb-2">
+              <div className="text-lg font-mono mb-2 break-words">
                 {convertedDateTime || 'Select date and time'}
               </div>
               <p className="text-blue-100 text-sm">
@@ -198,39 +244,39 @@ const TimezoneCalculator = () => {
             </div>
 
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Quick Reference</h3>
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Conversion Summary</h3>
               <div className="space-y-3">
                 <div className="flex justify-between">
-                  <span className="text-gray-600 dark:text-gray-300">From:</span>
+                  <span className="text-gray-600 dark:text-gray-300">Input:</span>
                   <span className="font-semibold text-gray-900 dark:text-white">
                     {inputDate} {inputTime}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600 dark:text-gray-300">Source Zone:</span>
+                  <span className="text-gray-600 dark:text-gray-300">From:</span>
                   <span className="font-semibold text-gray-900 dark:text-white text-sm">
-                    {timezones.find(tz => tz.value === fromTimezone)?.label.split(' ')[0]}
+                    {timezones.find(tz => tz.value === fromTimezone)?.label.split(' (')[0]}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600 dark:text-gray-300">Target Zone:</span>
+                  <span className="text-gray-600 dark:text-gray-300">To:</span>
                   <span className="font-semibold text-gray-900 dark:text-white text-sm">
-                    {timezones.find(tz => tz.value === toTimezone)?.label.split(' ')[0]}
+                    {timezones.find(tz => tz.value === toTimezone)?.label.split(' (')[0]}
                   </span>
                 </div>
               </div>
             </div>
 
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Current Times</h3>
-              <div className="space-y-2 text-sm">
-                {[fromTimezone, toTimezone].filter((tz, index, arr) => arr.indexOf(tz) === index).map(tz => (
-                  <div key={tz} className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-300">
-                      {timezones.find(timezone => timezone.value === tz)?.label.split(' ')[0]}:
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">World Clock</h3>
+              <div className="space-y-2 text-sm max-h-48 overflow-y-auto">
+                {timezones.map(tz => (
+                  <div key={tz.value} className="flex justify-between items-center py-1">
+                    <span className="text-gray-600 dark:text-gray-300 text-xs">
+                      {tz.label.split(' (')[0]}:
                     </span>
                     <span className="font-mono font-semibold text-gray-900 dark:text-white">
-                      {getCurrentTimeInTimezone(tz)}
+                      {currentTimes[tz.value] || 'Loading...'}
                     </span>
                   </div>
                 ))}
@@ -241,15 +287,18 @@ const TimezoneCalculator = () => {
 
         {/* Educational Content */}
         <div className="mt-12 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-          <h3 className="text-2xl font-semibold text-gray-900 dark:text-white mb-4">Understanding Timezones</h3>
+          <h3 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6 flex items-center">
+            <Globe className="h-6 w-6 mr-2" />
+            Understanding Timezones
+          </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-gray-600 dark:text-gray-300">
             <div>
               <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Daylight Saving Time</h4>
-              <p>Many regions observe daylight saving time, which can affect timezone calculations. This calculator automatically accounts for DST when applicable.</p>
+              <p>Many regions observe daylight saving time, which can affect timezone calculations. This calculator provides a simplified conversion - for precise calculations, consider using specialized timezone libraries.</p>
             </div>
             <div>
               <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Global Business</h4>
-              <p>When scheduling international meetings or calls, always confirm the timezone with participants and consider using UTC as a reference point.</p>
+              <p>When scheduling international meetings or calls, always confirm the timezone with participants and consider using UTC as a reference point to avoid confusion.</p>
             </div>
             <div>
               <h4 className="font-semibold text-gray-900 dark:text-white mb-2">UTC Reference</h4>
@@ -257,7 +306,7 @@ const TimezoneCalculator = () => {
             </div>
             <div>
               <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Travel Planning</h4>
-              <p>When traveling, remember that timezone changes can affect your schedule. Plan accordingly for jet lag and time adjustments.</p>
+              <p>When traveling, remember that timezone changes can affect your schedule. Plan accordingly for jet lag and time adjustments, especially for business meetings.</p>
             </div>
           </div>
         </div>
