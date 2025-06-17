@@ -196,7 +196,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* CTA Section */}
+      {/* CTA Section - Centered mortgage button */}
       <section className="py-16 bg-gray-100 dark:bg-gray-900">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
@@ -205,18 +205,12 @@ const Index = () => {
           <p className="text-lg text-gray-600 dark:text-gray-300 mb-8">
             Join thousands of users who trust our calculators and educational content for their financial planning
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex justify-center">
             <Link 
               to="/calculator/mortgage"
               className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
             >
               Calculate Your Mortgage
-            </Link>
-            <Link 
-              to="/calculator/investment"
-              className="bg-green-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors"
-            >
-              Plan Your Investments
             </Link>
           </div>
         </div>
