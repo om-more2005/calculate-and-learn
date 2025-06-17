@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Calculator, Home, Lightbulb, User, TrendingUp, Activity, Clock, Globe } from 'lucide-react';
+import { Calculator, Home, Lightbulb, User, TrendingUp, Activity, Clock, Globe, DollarSign } from 'lucide-react';
 import CalculatorCard from '../components/CalculatorCard';
 import BlogCard from '../components/BlogCard';
 import AdSpace from '../components/AdSpace';
@@ -25,7 +25,7 @@ const Index = () => {
     {
       title: "Loan Calculator",
       description: "Calculate payments for personal loans, auto loans, and other installment loans.",
-      icon: Calculator,
+      icon: DollarSign,
       link: "/calculator/loan",
       category: "Finance"
     },
@@ -110,7 +110,7 @@ const Index = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link 
-              to="/calculator/mortgage"
+              to="/calculators"
               className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
             >
               Try Our Calculators
