@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import BlogCard from '../components/BlogCard';
+import AdSpace from '../components/AdSpace';
 import { Search } from 'lucide-react';
 
 const Blog = () => {
@@ -9,6 +10,14 @@ const Blog = () => {
   const categories = ['All', 'Real Estate', 'Investment', 'Education', 'Personal Finance', 'Health'];
   
   const blogPosts = [
+    {
+      title: "Healthy Weight Management: Your Complete Guide to BMI and Wellness",
+      excerpt: "Learn evidence-based strategies for maintaining a healthy weight, understanding BMI, and making sustainable lifestyle changes for long-term wellness.",
+      date: "Dec 9, 2024",
+      category: "Health",
+      readTime: "8 min",
+      slug: "healthy-weight-management"
+    },
     {
       title: "Why Your GPA Matters: From High School to College Success",
       excerpt: "Understanding the critical role of GPA in your academic journey and proven strategies to improve your grades for better opportunities.",
@@ -134,6 +143,11 @@ const Blog = () => {
         </div>
       </section>
 
+      {/* Ad Space */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
+        <AdSpace size="leaderboard" />
+      </div>
+
       {/* Blog Posts */}
       <section className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -155,7 +169,15 @@ const Blog = () => {
               
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredPosts.map((post, index) => (
-                  <BlogCard key={index} {...post} />
+                  <React.Fragment key={index}>
+                    <BlogCard {...post} />
+                    {/* Ad space every 6 posts */}
+                    {(index + 1) % 6 === 0 && index < filteredPosts.length - 1 && (
+                      <div className="md:col-span-2 lg:col-span-3">
+                        <AdSpace size="banner" className="my-4" />
+                      </div>
+                    )}
+                  </React.Fragment>
                 ))}
               </div>
             </>
@@ -184,6 +206,11 @@ const Blog = () => {
           </div>
         </div>
       </section>
+
+      {/* Ad Space */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <AdSpace size="leaderboard" />
+      </div>
     </div>
   );
 };
