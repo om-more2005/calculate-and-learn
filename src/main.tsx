@@ -32,4 +32,3 @@ if (document.readyState === 'loading') {
     );
   }
 }
-</lov-writer>
